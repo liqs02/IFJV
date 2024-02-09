@@ -3,48 +3,59 @@ package com.patryklikus.ifjv.schemas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.JsonDataType;
-import java.util.Map;
-import java.util.Objects;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.util.Map;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Schema {
+public class Schema implements IntegerSchema, DoubleSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {
     @JsonProperty(required = true)
     private JsonDataType type;
     @JsonProperty
     private boolean required;
     @JsonProperty
-    private Integer min;
+    private Double min;
     @JsonProperty
-    private Integer max;
+    private Double max;
     @JsonProperty
+    private Integer minLength;
+    @JsonProperty
+    private Integer maxLength;
+    @JsonProperty
+    private Integer minSize;
+    @JsonProperty
+    private Integer maxSize;
+    @JsonProperty
+    private Schema items;
+    @JsonProperty
+    @Getter(AccessLevel.NONE)
     private Map<String, Schema> properties;
+    @Getter
+    private int requiredCount;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Schema schema = (Schema) o;
-        return required == schema.required && type == schema.type && Objects.equals(min, schema.min) && Objects.equals(max, schema.max) && Objects.equals(properties, schema.properties);
+    public Schema() {
+        requiredCount = -1;
+    }
+
+    public void setupRequiredCount() {
+        if (requiredCount == -1) {
+            requiredCount = (int) properties.values().stream()
+                    .filter(Schema::isRequired)
+                    .count();
+        }
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(type, required, min, max, properties);
+    public int getPropertiesCount() {
+        return properties.size();
     }
 
-    @Override
-    public String toString() {
-        return "Schema{" +
-                "type=" + type +
-                ", required=" + required +
-                ", min=" + min +
-                ", max=" + max +
-                ", properties=" + properties +
-                '}';
+    public Schema getPropertySchema(String key) {
+        if (properties == null) {
+            return null;
+        }
+        return properties.get(key);
     }
+
 }

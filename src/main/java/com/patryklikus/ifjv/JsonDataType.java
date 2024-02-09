@@ -2,7 +2,8 @@
 package com.patryklikus.ifjv;
 
 public enum JsonDataType {
-    NUMBER,
+    INTEGER,
+    DOUBLE,
     STRING,
     BOOLEAN,
     ARRAY,
