@@ -29,7 +29,7 @@ public class JsonValidatorImpl implements JsonValidator {
     private int validate(char[] json, int i, Schema schema) throws ValidationException {
         return switch (schema.getType()) {
             case INTEGER -> 0;
-            case DOUBLE -> 0;
+            case DOUBLE -> validateBoolean(json, i);
             case STRING -> 0;
             case BOOLEAN -> 0;
             case ARRAY -> 0;
@@ -50,8 +50,8 @@ public class JsonValidatorImpl implements JsonValidator {
      * 7. If found , char then go to step 2. If found }, return index of next char.
      * In each step we skip empty chars. If we found something different from what we were looking for we throw exception
      *
-     * @param json which we validate
-     * @param i index from we should start validation
+     * @param json   which we validate
+     * @param i      index from we should start validation
      * @param schema on the basis of which we validate
      * @return index of the first char after the object
      * @throws ValidationException if JSON is invalid
@@ -97,7 +97,7 @@ public class JsonValidatorImpl implements JsonValidator {
 
             // step 4
             var key = new String(charArray.toArray());
-            if(processedFields.contains(key)) {
+            if (processedFields.contains(key)) {
                 throw new ValidationException(key + " field is duplicated in object");
             }
             processedFields.add(key);
@@ -127,14 +127,26 @@ public class JsonValidatorImpl implements JsonValidator {
             for (; i < json.length; i++) {
                 char character = json[i];
                 if (character != ' ') {
-                    if(character == ',')
+                    if (character == ',')
                         break;
-                    if(character == '}')
+                    if (character == '}')
                         return ++i;
                 }
             }
         }
-
         throw new ValidationException("Object doesn't end properly");
+    }
+
+    private int validateBoolean(char[] json, int i) throws ValidationException {
+        for (; i < json.length; i++) {
+            char character = json[i];
+            if (character != ' ') {
+                if (character == 'f' && json[++i] == 'a' && json[++i] == 'l' && json[++i] == 's' && json[++i] == 'e')
+                    return ++i;
+                else if (character == 't' && json[++i] == 'r' && json[++i] == 'u' && json[++i] == 'e')
+                    return ++i;
+                throw new ValidationException("Boolean is invalid"); // todo what about nulls and empties?
+            }
+        }
     }
 }
