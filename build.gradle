@@ -4,6 +4,7 @@ buildscript {
     }
     ext {
         lombokVersion = '1.18.30'
+        jacksonVersion = '2.13.0'
         // tests
         junitVersion = '5.10.2'
         mockitoVersion = '5.10.0'
@@ -37,7 +38,10 @@ dependencies {
 
     implementation(
             "org.openjdk.jmh:jmh-core:$jmhVersion",
-            "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion"
+            "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion",
+            "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion",
+            "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
+            "org.slf4j:slf4j-api:2.0.12"
     )
 
     testImplementation(
