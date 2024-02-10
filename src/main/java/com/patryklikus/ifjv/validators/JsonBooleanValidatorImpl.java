@@ -6,13 +6,13 @@ import com.patryklikus.ifjv.CharUtils;
 class JsonBooleanValidatorImpl implements JsonBooleanValidator {
     @Override
     public int validateBoolean(char[] json, int i) throws ValidationException {
-        for (; i < json.length; i++) {
-            char c1 = json[i];
-            if (!CharUtils.isWhiteSpace(c1)) {
-                if (c1 == 'f' && json[i + 1] == 'a' && json[i + 2] == 'l' && json[i + 3] == 's' && json[i + 4] == 'e')
-                    return i + 5;
-                else if (c1 == 't' && json[i + 1] == 'r' && json[i + 2] == 'u' && json[i + 3] == 'e')
+        while (i < json.length) {
+            char character = json[i++];
+            if (!CharUtils.isWhiteSpace(character)) {
+                if (character == 'f' && json[i] == 'a' && json[i + 1] == 'l' && json[i + 2] == 's' && json[i + 3] == 'e')
                     return i + 4;
+                else if (character == 't' && json[i] == 'r' && json[i + 1] == 'u' && json[i + 2] == 'e')
+                    return i + 3;
                 else
                     throw new ValidationException("Boolean is invalid");
             }

@@ -4,7 +4,6 @@ package com.patryklikus.ifjv.validators;
 import com.patryklikus.ifjv.CharUtils;
 import com.patryklikus.ifjv.schemas.ObjectSchema;
 import gnu.trove.list.linked.TCharLinkedList;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
     @Override
     public int validateObject(char[] json, int i, ObjectSchema schema) throws ValidationException {
         int requiredPropertiesCount = schema.getRequiredPropertiesCount();
-
         // 1 step
         while (i < json.length) {
             char character = json[i++];
@@ -33,36 +31,47 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                 }
             }
         }
-        Set<String> processedFields = new HashSet<>(schema.getPropertiesCount() + 1, 1);
+        // step 2
         int[] indexPointer = new int[1];
         TCharLinkedList extractedString = null;
         for (; i < json.length; i++) {
-            // step 2
+            char character = json[i];
+            if (!CharUtils.isWhiteSpace(character)) {
+                if (character == '}') {
+                    if (requiredPropertiesCount == 0)
+                        return ++i;
+                    else
+                        throw new ValidationException("Object is empty and doesn't contain required fields");
+                } else {
+                    break;
+                }
+            }
+        }
+        Set<String> processedFields = new HashSet<>(schema.getPropertiesCount() + 1, 1);
+        for (; i < json.length; i++) {
+            // step 3
             while (i < json.length) {
                 char character = json[i++];
                 if (!CharUtils.isWhiteSpace(character)) {
-                    if (character == '}') {
-                        if (requiredPropertiesCount == 0)
-                            return i;
-                        else
-                            throw new ValidationException("Object is empty and doesn't contain required fields");
-                    } else {
-                        indexPointer[0] = i;
+                    if (character == '"') {
+                        indexPointer[0] = i - 1;
                         extractedString = CharUtils.extractString(json, indexPointer);
                         i = indexPointer[0];
                         break;
+                    } else {
+                        throw new ValidationException("Invalid key string");
                     }
                 }
             }
             if (extractedString == null)
                 throw new ValidationException("Object doesn't end properly");
-            // step 3
+            // step 4
             var key = new String(extractedString.toArray());
             if (processedFields.contains(key)) {
                 throw new ValidationException(key + " field is duplicated in object");
             }
             processedFields.add(key);
-            // step 4
+            // step 5
             while (i < json.length) {
                 char character = json[i++];
                 if (!CharUtils.isWhiteSpace(character)) {
@@ -74,13 +83,15 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                     }
                 }
             }
-            // step 5
+            // step 6
             var propertySchema = schema.getProperty(key);
             if (propertySchema == null) {
                 throw new ValidationException();
             }
             i = jsonValidator.validate(json, i, propertySchema);
-            // step 6
+            if(propertySchema.isRequired())
+                requiredPropertiesCount++;
+            // step 7
             while (i < json.length) {
                 char character = json[i++];
                 if (!CharUtils.isWhiteSpace(character)) {
@@ -96,5 +107,6 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             }
         }
         throw new ValidationException("Object doesn't end properly");
+
     }
 }

@@ -5,6 +5,7 @@ buildscript {
     ext {
         lombokVersion = '1.18.30'
         jacksonVersion = '2.13.0'
+        slf4jVersion = '2.0.12'
         // tests
         junitVersion = '5.10.2'
         mockitoVersion = '5.10.0'
@@ -33,14 +34,17 @@ version = '0.0-ALPHA'
 
 dependencies {
     compileOnly "org.projectlombok:lombok:$lombokVersion"
+    runtimeOnly "org.slf4j:slf4j-jdk14:$slf4jVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
     implementation(
             "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:$jacksonVersion",
             "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion",
-            "org.slf4j:slf4j-api:2.0.12",
+            "org.slf4j:slf4j-api:$slf4jVersion",
             "net.sf.trove4j:trove4j:3.0.3"
     )
+
+
 
     testImplementation(
             "org.junit.jupiter:junit-jupiter-api:$junitVersion",

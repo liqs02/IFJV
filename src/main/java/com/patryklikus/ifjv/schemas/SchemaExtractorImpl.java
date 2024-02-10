@@ -1,6 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.schemas;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
@@ -18,17 +19,19 @@ public class SchemaExtractorImpl implements SchemaExtractor {
                 .build();
     }
 
-    public Schema extract(String yamlSchema) {
+    public Schema extract(String yamlSchema) throws InvalidSchemaException {
+        Schema schema;
         try {
-            Schema schema = yamlMapper.readValue(yamlSchema, Schema.class);
-            int requiredCount = (int) schema.getProperties().values().stream()
-                    .filter(Schema::isRequired)
-                    .count();
-            schema.setRequiredPropertiesCount(requiredCount);
-            return schema;
-        } catch (Exception e) {
+            schema = yamlMapper.readValue(yamlSchema, Schema.class);
+        } catch (JsonProcessingException e) {
             LOG.warn("Invalid YAML schema", e);
-            return null;
+            throw new InvalidSchemaException(e);
         }
+        int requiredCount = (int) schema.getProperties().values().stream()
+                .filter(Schema::isRequired)
+                .count();
+        schema.setRequiredPropertiesCount(requiredCount);
+        return schema;
+
     }
 }

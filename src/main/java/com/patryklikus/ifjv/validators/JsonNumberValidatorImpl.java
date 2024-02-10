@@ -20,9 +20,9 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character)) {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
                 validateIntRange(charList, schema);
-                return i;
+                return i - 1;
             } else {
                 throw new ValidationException("Invalid integer");
             }
@@ -47,7 +47,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             charList.add(character);
             if (character == '.') {
                 break;
-            } else if (CharUtils.isWhiteSpace(character)) {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
                 return i;
             } else if (CharUtils.isNotDigit(character)) {
                 throw new ValidationException("Invalid double");
@@ -59,7 +59,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character)) {
+            } else if (CharUtils.isWhiteSpace(character)  || character == ',') {
                 validateDoubleRange(charList, schema);
                 return i;
             } else {

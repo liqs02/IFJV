@@ -4,5 +4,5 @@ package com.patryklikus.ifjv.schemas;
 import lombok.NonNull;
 
 public interface SchemaExtractor {
-    Schema extract(@NonNull String yamlSchema);
+    Schema extract(@NonNull String yamlSchema) throws InvalidSchemaException;
 }

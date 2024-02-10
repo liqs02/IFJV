@@ -3,10 +3,9 @@ package com.patryklikus.ifjv.validators;
 
 import com.patryklikus.ifjv.CharUtils;
 import com.patryklikus.ifjv.schemas.Schema;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Optional;
 
 public class JsonValidatorImpl implements JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidatorImpl.class);
@@ -26,7 +25,7 @@ public class JsonValidatorImpl implements JsonValidator {
 
     @Override
     public Optional<String> validate(char[] json, Schema schema) {
-        // todo remember about required, case when boolean is required and it's all json
+        // todo required doesn't work if property is not inside object
         try {
             int i = validate(json, 0, schema);
             for (; i < json.length; i++) {
