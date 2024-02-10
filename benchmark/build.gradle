@@ -1,0 +1,20 @@
+/*repositories {
+    mavenCentral()
+}
+
+ext {
+
+    jmhVersion = '1.36'
+}
+
+group = 'com.patryklikus'
+version = '0.0'
+
+dependencies {
+    annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion"
+
+    implementation(
+            "org.openjdk.jmh:jmh-core:$jmhVersion",
+            "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion",
+    )
+}*/

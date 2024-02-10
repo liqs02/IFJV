@@ -1,10 +1,10 @@
 /* Copyright Patryk Likus All Rights Reserved. */
-package com.patryklikus.ifjv;
+package com.patryklikus.ifjv.validators;
 
+import com.patryklikus.ifjv.schemas.IntegerSchema;
 import com.patryklikus.ifjv.schemas.ObjectSchema;
 import com.patryklikus.ifjv.schemas.Schema;
-import com.patryklikus.ifjv.validators.JsonValidator;
-import com.patryklikus.ifjv.validators.ValidationException;
+import gnu.trove.list.array.TCharArrayList;
 import gnu.trove.list.linked.TCharLinkedList;
 
 import java.util.HashSet;
@@ -19,11 +19,11 @@ public class JsonValidatorImpl implements JsonValidator {
             int i = validate(json, 0, schema);
             for (; i < json.length; i++) {
                 char character = json[i];
-                if (character != ' ')
+                if (!isWhiteSpace(character))
                     return false;
             }
         } catch (ValidationException e) {
-            return false;
+            throw new RuntimeException(e);
         }
         return true;
     }
@@ -31,7 +31,7 @@ public class JsonValidatorImpl implements JsonValidator {
     private int validate(char[] json, int i, Schema schema) throws ValidationException {
         return switch (schema.getType()) {
             case BOOLEAN -> validateBoolean(json, i);
-            case INTEGER -> -1;
+            case INTEGER -> validateInteger(json, i, schema);
             case DOUBLE -> -1;
             case STRING -> -1;
             case OBJECT -> validateObject(json, i, schema);
@@ -50,16 +50,16 @@ public class JsonValidatorImpl implements JsonValidator {
     private int validateBoolean(char[] json, int i) throws ValidationException {
         for (; i < json.length; i++) {
             char c1 = json[i];
-            if (c1 != ' ') {
+            if (!isWhiteSpace(c1)) {
                 if (c1 == 'f' && json[i + 1] == 'a' && json[i + 2] == 'l' && json[i + 3] == 's' && json[i + 4] == 'e')
                     return i + 5;
                 else if (c1 == 't' && json[i + 1] == 'r' && json[i + 2] == 'u' && json[i + 3] == 'e')
                     return i + 4;
                 else
-                    throw new ValidationException("Boolean is invalid"); // todo what about nulls and empties?
+                    throw new ValidationException("Boolean is invalid");
             }
         }
-        throw new ValidationException("Boolean is empty"); // todo empty
+        throw new ValidationException("Boolean is empty");
     }
 
     /**
@@ -68,16 +68,37 @@ public class JsonValidatorImpl implements JsonValidator {
      * @return index of the first char after the integer
      * @throws ValidationException if JSON is invalid
      */
-    private int validateInt(char[] json, int i) throws ValidationException {
+    private int validateInteger(char[] json, int i, IntegerSchema schema) throws ValidationException {
         for (; i < json.length; i++) {
-            if (json[i] != ' ')
-                break;
-        }
-        for (; i < json.length; i++) {
-            if (json[i] != ' ')
+            if (!isWhiteSpace(json[i]))
                 break;
         }
 
+        var charArray = new TCharArrayList();
+        char character = json[i++];
+        if (character == '-' || (character >= '0' && character <= '9'))
+            charArray.add(character);
+
+        while (i < json.length) {
+            character = json[i++];
+            if (character >= '0' && character <= '9') {
+                charArray.add(character);
+            } else if (isWhiteSpace(character)) {
+                String stringNumber = new String(charArray.toArray());
+                int number = Integer.parseInt(stringNumber);
+                Double max = schema.getMax();
+                if (max != null && number > max) {
+                    throw new ValidationException("Integer can't be higher than " + max);
+                }
+                Double min = schema.getMin();
+                if (min != null && number < min) {
+                    throw new ValidationException("Integer can't be lower than " + min);
+                }
+                return i;
+            } else {
+                throw new ValidationException("Invalid number");
+            }
+        }
         throw new ValidationException("Int is empty");
     }
 
@@ -103,9 +124,9 @@ public class JsonValidatorImpl implements JsonValidator {
         int requiredPropertiesCount = schema.getRequiredPropertiesCount();
 
         // 1 step
-        for (; i < json.length; i++) {
-            char character = json[i];
-            if (character != ' ') {
+        while (i < json.length) {
+            char character = json[i++];
+            if (!isWhiteSpace(character)) {
                 if (character == '{') {
                     break;
                 } else {
@@ -116,15 +137,14 @@ public class JsonValidatorImpl implements JsonValidator {
         Set<String> processedFields = new HashSet<>(schema.getPropertiesCount() + 1, 1);
         for (; i < json.length; i++) {
             // 2 step
-            for (; i < json.length; i++) {
-                char character = json[i];
-                if (character != ' ') {
+            while (i < json.length) {
+                char character = json[i++];
+                if (!isWhiteSpace(character)) {
                     if (character == '"') {
-                        i++;
                         break;
                     } else if (character == '}') {
                         if (requiredPropertiesCount == 0)
-                            return ++i;
+                            return i;
                         else
                             throw new ValidationException("Object is empty and doesn't contain required fields");
                     } else {
@@ -134,12 +154,11 @@ public class JsonValidatorImpl implements JsonValidator {
             }
             // 3 step
             var charArray = new TCharLinkedList();
-            for (; i < json.length; i++) {
-                char character = json[i];
+            while (i < json.length) {
+                char character = json[i++];
                 if (character == '\\')
                     charArray.add(json[++i]);
                 else if (character == '"') {
-                    i++;
                     break;
                 } else
                     charArray.add(character);
@@ -151,11 +170,10 @@ public class JsonValidatorImpl implements JsonValidator {
             }
             processedFields.add(key);
             // step 5
-            for (; i < json.length; i++) {
-                char character = json[i];
-                if (character != ' ') {
+            while (i < json.length) {
+                char character = json[i++];
+                if (!isWhiteSpace(character)) {
                     if (character == ':') {
-                        i++;
                         break;
                     } else {
                         String message = String.format("After %s key should be : char instead %s", key, character);
@@ -170,20 +188,24 @@ public class JsonValidatorImpl implements JsonValidator {
             }
             i = validate(json, i, propertySchema);
             // step 7
-            for (; i < json.length; i++) {
-                char character = json[i];
-                if (character != ' ') {
+            while (i < json.length) {
+                char character = json[i++];
+                if (!isWhiteSpace(character)) {
                     if (character == ',')
                         break;
                     if (character == '}') {
                         if (processedFields.size() != requiredPropertiesCount) {
                             throw new ValidationException("All required fields have to be declared");
                         }
-                        return ++i;
+                        return i;
                     }
                 }
             }
         }
         throw new ValidationException("Object doesn't end properly");
+    }
+
+    private boolean isWhiteSpace(char c) {
+        return c == ' ' || c == '\n';
     }
 }
