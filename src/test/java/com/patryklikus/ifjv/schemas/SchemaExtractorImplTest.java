@@ -41,13 +41,18 @@ class SchemaExtractorImplTest {
                 }
                 """;
 
-        assertTrue(jsonValidator.validate(json.toCharArray(), schema));
+        assertTrue(jsonValidator.validate(json.toCharArray(), schema).isEmpty());
     }
+
 
     @Test
     void t2() {
-        System.out.println((int) '-');
-        System.out.println((int) '0');
-        System.out.println((int) '9');
+        int[] num = {1};
+        x(num);
+        System.out.println(num[0]);
+    }
+
+    void x(int[] num) {
+        num[0]++;
     }
 }

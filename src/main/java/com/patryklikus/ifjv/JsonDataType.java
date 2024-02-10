@@ -6,8 +6,6 @@ public enum JsonDataType {
     DOUBLE,
     STRING,
     BOOLEAN,
-    ARRAY,
     OBJECT,
-    WHITESPACE,
-    NULL;
+    ARRAY;
 }

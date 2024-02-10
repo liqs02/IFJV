@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.Map;
 
 @Getter
-public class Schema implements IntegerSchema, DoubleSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {
+public class Schema implements NumberSchema, DoubleSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {
     @JsonProperty(required = true)
     private JsonDataType type;
     @JsonProperty
