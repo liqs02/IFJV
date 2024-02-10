@@ -1,8 +1,10 @@
 /* Copyright Patryk Likus All Rights Reserved. */
-package com.patryklikus.ifjv.validators;
+package com.patryklikus.ifjv;
 
 import com.patryklikus.ifjv.schemas.ObjectSchema;
 import com.patryklikus.ifjv.schemas.Schema;
+import com.patryklikus.ifjv.validators.JsonValidator;
+import com.patryklikus.ifjv.validators.ValidationException;
 import gnu.trove.list.linked.TCharLinkedList;
 
 import java.util.HashSet;
@@ -12,7 +14,7 @@ public class JsonValidatorImpl implements JsonValidator {
 
     @Override
     public boolean validate(char[] json, Schema schema) {
-        // todo remember about required
+        // todo remember about required, case when boolean is required and it's all json
         try {
             int i = validate(json, 0, schema);
             for (; i < json.length; i++) {
@@ -28,21 +30,62 @@ public class JsonValidatorImpl implements JsonValidator {
 
     private int validate(char[] json, int i, Schema schema) throws ValidationException {
         return switch (schema.getType()) {
-            case INTEGER -> 0;
-            case DOUBLE -> validateBoolean(json, i);
-            case STRING -> 0;
-            case BOOLEAN -> 0;
-            case ARRAY -> 0;
+            case BOOLEAN -> validateBoolean(json, i);
+            case INTEGER -> -1;
+            case DOUBLE -> -1;
+            case STRING -> -1;
             case OBJECT -> validateObject(json, i, schema);
-            case WHITESPACE -> 0;
-            case NULL -> 0;
+            case ARRAY -> -1;
+            case WHITESPACE -> -1;
+            case NULL -> -1;
         };
     }
 
     /**
+     * @param json which we validate
+     * @param i    index from we should start validation
+     * @return index of the first char after the boolean
+     * @throws ValidationException if JSON is invalid
+     */
+    private int validateBoolean(char[] json, int i) throws ValidationException {
+        for (; i < json.length; i++) {
+            char c1 = json[i];
+            if (c1 != ' ') {
+                if (c1 == 'f' && json[i + 1] == 'a' && json[i + 2] == 'l' && json[i + 3] == 's' && json[i + 4] == 'e')
+                    return i + 5;
+                else if (c1 == 't' && json[i + 1] == 'r' && json[i + 2] == 'u' && json[i + 3] == 'e')
+                    return i + 4;
+                else
+                    throw new ValidationException("Boolean is invalid"); // todo what about nulls and empties?
+            }
+        }
+        throw new ValidationException("Boolean is empty"); // todo empty
+    }
+
+    /**
+     * @param json which we validate
+     * @param i    index from we should start validation
+     * @return index of the first char after the integer
+     * @throws ValidationException if JSON is invalid
+     */
+    private int validateInt(char[] json, int i) throws ValidationException {
+        for (; i < json.length; i++) {
+            if (json[i] != ' ')
+                break;
+        }
+        for (; i < json.length; i++) {
+            if (json[i] != ' ')
+                break;
+        }
+
+        throw new ValidationException("Int is empty");
+    }
+
+
+    /**
      * STEPS: <br/>
      * 1. Should find { char <br/>
-     * 2. Should find " char <br/>
+     * 2. Should find " char. If found } char checks that object have not any required parameters <br/>
      * 3. We create a string from the following character until " appears (keeping in mind the masking) <br/>\
      * 4. Checks that the object does not have two fields with the same key <br/>
      * 5. Should find : char <br/>
@@ -57,12 +100,14 @@ public class JsonValidatorImpl implements JsonValidator {
      * @throws ValidationException if JSON is invalid
      */
     private int validateObject(char[] json, int i, ObjectSchema schema) throws ValidationException {
+        int requiredPropertiesCount = schema.getRequiredPropertiesCount();
+
         // 1 step
         for (; i < json.length; i++) {
             char character = json[i];
             if (character != ' ') {
                 if (character == '{') {
-                    break; // todo check increment and how it works
+                    break;
                 } else {
                     throw new ValidationException("Object doesn't begin with { char");
                 }
@@ -77,6 +122,11 @@ public class JsonValidatorImpl implements JsonValidator {
                     if (character == '"') {
                         i++;
                         break;
+                    } else if (character == '}') {
+                        if (requiredPropertiesCount == 0)
+                            return ++i;
+                        else
+                            throw new ValidationException("Object is empty and doesn't contain required fields");
                     } else {
                         throw new ValidationException("Object key doesn't begin with \" char");
                     }
@@ -94,14 +144,12 @@ public class JsonValidatorImpl implements JsonValidator {
                 } else
                     charArray.add(character);
             }
-
             // step 4
             var key = new String(charArray.toArray());
             if (processedFields.contains(key)) {
                 throw new ValidationException(key + " field is duplicated in object");
             }
             processedFields.add(key);
-
             // step 5
             for (; i < json.length; i++) {
                 char character = json[i];
@@ -115,38 +163,27 @@ public class JsonValidatorImpl implements JsonValidator {
                     }
                 }
             }
-
             // step 6
-            var propertySchema = schema.getPropertySchema(key);
+            var propertySchema = schema.getProperty(key);
             if (propertySchema == null) {
                 throw new ValidationException();
             }
             i = validate(json, i, propertySchema);
-
             // step 7
             for (; i < json.length; i++) {
                 char character = json[i];
                 if (character != ' ') {
                     if (character == ',')
                         break;
-                    if (character == '}')
+                    if (character == '}') {
+                        if (processedFields.size() != requiredPropertiesCount) {
+                            throw new ValidationException("All required fields have to be declared");
+                        }
                         return ++i;
+                    }
                 }
             }
         }
         throw new ValidationException("Object doesn't end properly");
-    }
-
-    private int validateBoolean(char[] json, int i) throws ValidationException {
-        for (; i < json.length; i++) {
-            char character = json[i];
-            if (character != ' ') {
-                if (character == 'f' && json[++i] == 'a' && json[++i] == 'l' && json[++i] == 's' && json[++i] == 'e')
-                    return ++i;
-                else if (character == 't' && json[++i] == 'r' && json[++i] == 'u' && json[++i] == 'e')
-                    return ++i;
-                throw new ValidationException("Boolean is invalid"); // todo what about nulls and empties?
-            }
-        }
     }
 }

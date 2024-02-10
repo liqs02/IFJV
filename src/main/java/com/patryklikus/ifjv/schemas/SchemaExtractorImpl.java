@@ -21,7 +21,10 @@ public class SchemaExtractorImpl implements SchemaExtractor {
     public Schema extract(String yamlSchema) {
         try {
             Schema schema = yamlMapper.readValue(yamlSchema, Schema.class);
-            schema.setupRequiredCount();
+            int requiredCount = (int) schema.getProperties().values().stream()
+                    .filter(Schema::isRequired)
+                    .count();
+            schema.setRequiredPropertiesCount(requiredCount);
             return schema;
         } catch (Exception e) {
             LOG.warn("Invalid YAML schema", e);

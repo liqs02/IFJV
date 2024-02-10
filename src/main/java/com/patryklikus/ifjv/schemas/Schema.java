@@ -3,8 +3,8 @@ package com.patryklikus.ifjv.schemas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.JsonDataType;
-import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
@@ -29,29 +29,16 @@ public class Schema implements IntegerSchema, DoubleSchema, StringSchema, Boolea
     @JsonProperty
     private Schema items;
     @JsonProperty
-    @Getter(AccessLevel.NONE)
     private Map<String, Schema> properties;
-    @Getter
-    private int requiredCount;
-
-    public Schema() {
-        requiredCount = -1;
-    }
-
-    public void setupRequiredCount() {
-        if (requiredCount == -1) {
-            requiredCount = (int) properties.values().stream()
-                    .filter(Schema::isRequired)
-                    .count();
-        }
-    }
+    @Setter
+    private int requiredPropertiesCount;
 
     @Override
     public int getPropertiesCount() {
         return properties.size();
     }
 
-    public Schema getPropertySchema(String key) {
+    public Schema getProperty(String key) {
         if (properties == null) {
             return null;
         }

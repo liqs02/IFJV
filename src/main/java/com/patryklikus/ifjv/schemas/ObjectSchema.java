@@ -2,10 +2,16 @@ package com.patryklikus.ifjv.schemas;
 
 import lombok.NonNull;
 
+import java.util.Map;
+
 public interface ObjectSchema {
     boolean isRequired();
 
     int getPropertiesCount();
 
-    Schema getPropertySchema(@NonNull String key);
+    Map<String, Schema> getProperties();
+
+    Schema getProperty(@NonNull String key);
+
+    int getRequiredPropertiesCount();
 }
