@@ -1,7 +1,7 @@
+/* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
 import com.patryklikus.ifjv.schemas.ArraySchema;
-import com.patryklikus.ifjv.schemas.StringSchema;
 
 public interface JsonArrayValidator {
     /**

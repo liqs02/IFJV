@@ -1,8 +1,8 @@
+/* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.schemas;
 
-import lombok.NonNull;
-
 import java.util.Map;
+import lombok.NonNull;
 
 public interface ObjectSchema {
     boolean isRequired();

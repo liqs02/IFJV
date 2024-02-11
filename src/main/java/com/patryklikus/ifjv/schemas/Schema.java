@@ -3,10 +3,9 @@ package com.patryklikus.ifjv.schemas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.JsonDataType;
+import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Map;
 
 @Getter
 public class Schema implements NumberSchema, DoubleSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {

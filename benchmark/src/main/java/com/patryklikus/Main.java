@@ -1,3 +1,4 @@
+/* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus;
 
 public class Main {
