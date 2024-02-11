@@ -5,8 +5,6 @@ import java.util.Map;
 import lombok.NonNull;
 
 public interface ObjectSchema {
-    boolean isRequired();
-
     int getPropertiesCount();
 
     Map<String, Schema> getProperties();

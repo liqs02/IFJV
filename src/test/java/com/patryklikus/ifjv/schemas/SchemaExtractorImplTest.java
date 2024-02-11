@@ -2,10 +2,11 @@
 package com.patryklikus.ifjv.schemas;
 
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.patryklikus.ifjv.validators.JsonValidator;
 import com.patryklikus.ifjv.validators.JsonValidatorImpl;
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,21 +30,14 @@ class SchemaExtractorImplTest {
                     min: -12
                     required: false
                   male:
-                    type: array
+                    type: boolean
                     required: true
-                    items:
-                        type: boolean
                 """;
 
         Schema schema = schemaExtractor.extract(yaml);
 
-        String json = """
-                {
-                  "age": -11,
-                  "male": [true, false, true]
-                }
-                """;
-        assertNull(jsonValidator.validate(json.toCharArray(), schema).get());
+        String json = "{\"male\": true}";
+        assertThrows(NoSuchElementException.class, () -> jsonValidator.validate(json.toCharArray(), schema).get());
     }
 
 

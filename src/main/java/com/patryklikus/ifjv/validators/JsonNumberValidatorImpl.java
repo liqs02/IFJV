@@ -1,8 +1,8 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
-import com.patryklikus.ifjv.CharUtils;
 import com.patryklikus.ifjv.schemas.NumberSchema;
+import com.patryklikus.ifjv.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
 
 class JsonNumberValidatorImpl implements JsonNumberValidator {

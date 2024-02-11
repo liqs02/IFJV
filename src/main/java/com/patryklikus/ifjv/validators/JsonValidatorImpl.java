@@ -1,8 +1,8 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
-import com.patryklikus.ifjv.CharUtils;
 import com.patryklikus.ifjv.schemas.Schema;
+import com.patryklikus.ifjv.utils.CharUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

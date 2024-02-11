@@ -1,5 +1,5 @@
 /* Copyright Patryk Likus All Rights Reserved. */
-package com.patryklikus.ifjv;
+package com.patryklikus.ifjv.utils;
 
 import com.patryklikus.ifjv.validators.ValidationException;
 import gnu.trove.list.linked.TCharLinkedList;

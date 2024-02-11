@@ -2,13 +2,12 @@
 package com.patryklikus.ifjv.schemas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.patryklikus.ifjv.JsonDataType;
 import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-public class Schema implements NumberSchema, DoubleSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {
+public class Schema implements NumberSchema, StringSchema, BooleanSchema, ArraySchema, ObjectSchema {
     @JsonProperty(required = true)
     private JsonDataType type;
     @JsonProperty
