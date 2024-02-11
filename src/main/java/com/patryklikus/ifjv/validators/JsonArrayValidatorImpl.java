@@ -19,7 +19,7 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
                 if (character == '[')
                     break;
                 else
-                    throw new ValidationException("Array should begin with [ character");
+                    throw new ValidationException("Array should begin with [ character", --i);
             }
         }
 
@@ -34,10 +34,10 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
                     else if (character == ']')
                         return i;
                     else
-                        throw new ValidationException("Array should end with ] character");
+                        throw new ValidationException("Array should end with ] character", --i);
                 }
             }
         }
-        throw new ValidationException("Array should end with ] character");
+        throw new ValidationException("Array should end with ] character", --i);
     }
 }

@@ -27,7 +27,7 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                 if (character == '{') {
                     break;
                 } else {
-                    throw new ValidationException("Object doesn't begin with { char");
+                    throw new ValidationException("Object doesn't begin with {", --i);
                 }
             }
         }
@@ -41,7 +41,7 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                     if (requiredPropertiesCount == 0)
                         return ++i;
                     else
-                        throw new ValidationException("Object is empty and doesn't contain required fields");
+                        throw new ValidationException("Object is empty and doesn't contain required fields", i);
                 } else {
                     break;
                 }
@@ -59,16 +59,16 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                         i = indexPointer[0];
                         break;
                     } else {
-                        throw new ValidationException("Invalid key string");
+                        throw new ValidationException("Invalid key string", --i);
                     }
                 }
             }
             if (extractedString == null)
-                throw new ValidationException("Object doesn't end properly");
+                throw new ValidationException("Object doesn't end properly", --i);
             // step 4
             var key = new String(extractedString.toArray());
             if (processedFields.contains(key)) {
-                throw new ValidationException(key + " field is duplicated in object");
+                throw new ValidationException(key + " field is duplicated in object", --i);
             }
             processedFields.add(key);
             // step 5
@@ -78,18 +78,17 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                     if (character == ':') {
                         break;
                     } else {
-                        String message = String.format("After %s key should be : char instead %s", key, character);
-                        throw new ValidationException(message);
+                        throw new ValidationException("Unexpected character", --i);
                     }
                 }
             }
             // step 6
             var propertySchema = schema.getProperty(key);
             if (propertySchema == null) {
-                throw new ValidationException();
+                throw new ValidationException("Object has a prohibited field", --i);
             }
             i = jsonValidator.validate(json, i, propertySchema);
-            if(propertySchema.isRequired())
+            if (propertySchema.isRequired())
                 requiredPropertiesCount++;
             // step 7
             while (i < json.length) {
@@ -99,14 +98,13 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                         break;
                     if (character == '}') {
                         if (processedFields.size() != requiredPropertiesCount) {
-                            throw new ValidationException("All required fields have to be declared");
+                            throw new ValidationException("All required fields have to be declared in object", --i);
                         }
                         return i;
                     }
                 }
             }
         }
-        throw new ValidationException("Object doesn't end properly");
-
+        throw new ValidationException("Object doesn't end properly", --i);
     }
 }

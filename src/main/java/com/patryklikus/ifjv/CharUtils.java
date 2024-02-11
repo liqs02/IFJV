@@ -24,7 +24,7 @@ public final class CharUtils {
                 if (character == '"')
                     break;
                 else
-                    throw new ValidationException("String doesn't begin with \" char");
+                    throw new ValidationException("String doesn't begin with \" char", --i);
             }
         }
 
@@ -41,7 +41,7 @@ public final class CharUtils {
             }
         }
 
-        throw new ValidationException("String doesn't end with \" char");
+        throw new ValidationException("String doesn't end with \" char", --i);
     }
 
     public static boolean isWhiteSpace(char character) {

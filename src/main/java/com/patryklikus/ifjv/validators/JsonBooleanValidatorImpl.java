@@ -14,9 +14,9 @@ class JsonBooleanValidatorImpl implements JsonBooleanValidator {
                 else if (character == 't' && json[i] == 'r' && json[i + 1] == 'u' && json[i + 2] == 'e')
                     return i + 3;
                 else
-                    throw new ValidationException("Boolean is invalid");
+                    throw new ValidationException("Boolean is invalid", --i);
             }
         }
-        throw new ValidationException("Boolean is empty");
+        throw new ValidationException("Boolean is empty", --i);
     }
 }

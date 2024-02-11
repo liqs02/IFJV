@@ -2,10 +2,10 @@
 package com.patryklikus.ifjv.validators;
 
 public class ValidationException extends Exception {
-    public ValidationException() {
-    }
-
-    public ValidationException(String message) {
-        super(message);
+    /**
+     * @param message begin with uppercase, ends without any space, comma, or dot.
+     */
+    public ValidationException(String message, int errorIndex) {
+        super(message + " at index " + errorIndex);
     }
 }

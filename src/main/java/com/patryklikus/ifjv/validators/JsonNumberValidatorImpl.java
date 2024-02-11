@@ -21,13 +21,13 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
             } else if (CharUtils.isWhiteSpace(character) || character == ',') {
-                validateIntRange(charList, schema);
-                return i - 1;
+                validateIntRange(charList, schema, --i);
+                return i;
             } else {
-                throw new ValidationException("Invalid integer");
+                throw new ValidationException("Invalid integer", --i);
             }
         }
-        throw new ValidationException("Int is empty");
+        throw new ValidationException("Int is empty", --i);
     }
 
     @Override
@@ -50,7 +50,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             } else if (CharUtils.isWhiteSpace(character) || character == ',') {
                 return i;
             } else if (CharUtils.isNotDigit(character)) {
-                throw new ValidationException("Invalid double");
+                throw new ValidationException("Invalid double", --i);
             }
         }
 
@@ -59,36 +59,36 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character)  || character == ',') {
-                validateDoubleRange(charList, schema);
+            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+                validateDoubleRange(charList, schema, --i);
                 return i;
             } else {
-                throw new ValidationException("Invalid number");
+                throw new ValidationException("Invalid number", --i);
             }
         }
 
-        throw new ValidationException("Double is empty");
+        throw new ValidationException("Double is empty", --i);
     }
 
-    private void validateIntRange(TCharLinkedList digits, NumberSchema schema) throws ValidationException {
+    private void validateIntRange(TCharLinkedList digits, NumberSchema schema, int beginIndex) throws ValidationException {
         String stringNumber = new String(digits.toArray());
         int number = Integer.parseInt(stringNumber);
         Double max = schema.getMax();
         if (max != null && number > max)
-            throw new ValidationException("Integer can't be higher than " + max.intValue());
+            throw new ValidationException("Integer can't be higher than " + max.intValue(), beginIndex);
         Double min = schema.getMin();
         if (min != null && number < min)
-            throw new ValidationException("Integer can't be lower than " + min.intValue());
+            throw new ValidationException("Integer can't be lower than " + min.intValue(), beginIndex);
     }
 
-    private void validateDoubleRange(TCharLinkedList digits, NumberSchema schema) throws ValidationException {
+    private void validateDoubleRange(TCharLinkedList digits, NumberSchema schema, int beginIndex) throws ValidationException {
         String stringNumber = new String(digits.toArray());
         double number = Double.parseDouble(stringNumber);
         Double max = schema.getMax();
         if (max != null && number > max)
-            throw new ValidationException("Integer can't be higher than " + max);
+            throw new ValidationException("Integer can't be higher than " + max, beginIndex);
         Double min = schema.getMin();
         if (min != null && number < min)
-            throw new ValidationException("Integer can't be lower than " + min);
+            throw new ValidationException("Integer can't be lower than " + min, beginIndex);
     }
 }
