@@ -1,7 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.utils;
 
-import com.patryklikus.ifjv.validators.ValidationException;
+import com.patryklikus.ifjv.validators.JsonValidationException;
 import gnu.trove.list.linked.TCharLinkedList;
 
 public final class CharUtils {
@@ -14,7 +14,7 @@ public final class CharUtils {
      * @param index array with one value (index) which will be updated
      * @return extracted string as char linked list
      */
-    public static TCharLinkedList extractString(char[] json, int[] index) throws ValidationException {
+    public static TCharLinkedList extractString(char[] json, int[] index) throws JsonValidationException {
         var charList = new TCharLinkedList();
         int i = index[0];
 
@@ -24,7 +24,7 @@ public final class CharUtils {
                 if (character == '"')
                     break;
                 else
-                    throw new ValidationException("String doesn't begin with \" char", --i);
+                    throw new JsonValidationException("String doesn't begin with \" char", --i);
             }
         }
 
@@ -41,7 +41,7 @@ public final class CharUtils {
             }
         }
 
-        throw new ValidationException("String doesn't end with \" char", --i);
+        throw new JsonValidationException("String doesn't end with \" char", --i);
     }
 
     public static boolean isWhiteSpace(char character) {

@@ -1,11 +1,11 @@
 /* Copyright Patryk Likus All Rights Reserved. */
-package com.patryklikus.ifjv.schemas;
+package com.patryklikus.ifjv.utils;
 
 public enum JsonDataType {
     BOOLEAN,
     INTEGER,
-    DOUBLE,
+    NUMBER,
     STRING,
     OBJECT,
-    ARRAY;
+    ARRAY,
 }

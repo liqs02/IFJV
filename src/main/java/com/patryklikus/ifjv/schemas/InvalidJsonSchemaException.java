@@ -1,8 +1,8 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.schemas;
 
-public class InvalidSchemaException extends RuntimeException {
-    public InvalidSchemaException(Throwable cause) {
+public class InvalidJsonSchemaException extends RuntimeException {
+    InvalidJsonSchemaException(Throwable cause) {
         super(cause);
     }
 }

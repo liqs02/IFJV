@@ -1,7 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
-import com.patryklikus.ifjv.schemas.Schema;
+import com.patryklikus.ifjv.schemas.models.*;
 import com.patryklikus.ifjv.utils.CharUtils;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ public class JsonValidatorImpl implements JsonValidator {
     }
 
     @Override
-    public Optional<String> validate(char[] json, Schema schema) {
+    public Optional<String> validate(char[] json, JsonSchema schema) {
         // todo required doesn't work if property is not inside object
         try {
             int i = validate(json, 0, schema);
@@ -35,7 +35,7 @@ public class JsonValidatorImpl implements JsonValidator {
                     return Optional.of(message);
                 }
             }
-        } catch (ValidationException e) {
+        } catch (JsonValidationException e) {
             return Optional.of(e.getMessage());
         } catch (RuntimeException e) {
             LOG.warn("Unexpected validation error", e);
@@ -44,14 +44,14 @@ public class JsonValidatorImpl implements JsonValidator {
         return Optional.empty();
     }
 
-    int validate(char[] json, int i, Schema schema) throws ValidationException {
+    int validate(char[] json, int i, JsonSchema schema) throws JsonValidationException {
         return switch (schema.getType()) {
-            case BOOLEAN -> booleanValidator.validateBoolean(json, i);
-            case INTEGER -> numberValidator.validateInteger(json, i, schema);
-            case DOUBLE -> numberValidator.validateDouble(json, i, schema);
-            case STRING -> stringValidator.validateString(json, i, schema);
-            case OBJECT -> objectValidator.validateObject(json, i, schema);
-            case ARRAY -> arrayValidator.validateArray(json, i, schema);
+            case BOOLEAN -> booleanValidator.validate(json, i);
+            case INTEGER -> numberValidator.validate(json, i, (IntegerSchema) schema);
+            case NUMBER -> numberValidator.validate(json, i, (NumberSchema) schema);
+            case STRING -> stringValidator.validate(json, i, (StringSchema) schema);
+            case OBJECT -> objectValidator.validate(json, i, (ObjectSchema) schema);
+            case ARRAY -> arrayValidator.validate(json, i, (ArraySchema) schema);
         };
     }
 }

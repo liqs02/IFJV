@@ -1,8 +1,8 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
-import com.patryklikus.ifjv.schemas.ObjectSchema;
-import com.patryklikus.ifjv.schemas.Schema;
+import com.patryklikus.ifjv.schemas.models.JsonSchema;
+import com.patryklikus.ifjv.schemas.models.ObjectSchema;
 import com.patryklikus.ifjv.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
 import java.util.HashSet;
@@ -19,7 +19,7 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
      * {@inheritDoc}
      */
     @Override
-    public int validateObject(char[] json, int i, ObjectSchema schema) throws ValidationException {
+    public int validate(char[] json, int i, ObjectSchema schema) throws JsonValidationException {
         // 1 step
         while (i < json.length) {
             char character = json[i++];
@@ -27,7 +27,7 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                 if (character == '{') {
                     break;
                 } else {
-                    throw new ValidationException("Object doesn't begin with {", --i);
+                    throw new JsonValidationException("Object doesn't begin with {", --i);
                 }
             }
         }
@@ -39,16 +39,16 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             char character = json[i];
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == '}') {
-                    if (schema.getPropertiesCount() == 0)
+                    if (schema.getDependentRequired().isEmpty())
                         return ++i;
                     else
-                        throw new ValidationException("Object is empty and doesn't contain required fields", i);
+                        throw new JsonValidationException("Object is empty and doesn't contain required fields", i);
                 } else {
                     break;
                 }
             }
         }
-        Set<String> processedFields = new HashSet<>(schema.getPropertiesCount() + 1, 1);
+        Set<String> processedFields = new HashSet<>(schema.getProperties().size() + 1, 1);
         for (; i < json.length; i++) {
             // step 3
             while (i < json.length) {
@@ -60,16 +60,16 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                         i = indexPointer[0];
                         break;
                     } else {
-                        throw new ValidationException("Invalid key string", --i);
+                        throw new JsonValidationException("Invalid key string", --i);
                     }
                 }
             }
             if (extractedString == null)
-                throw new ValidationException("Object doesn't end properly", --i);
+                throw new JsonValidationException("Object doesn't end properly", --i);
             // step 4
             var key = new String(extractedString.toArray());
             if (processedFields.contains(key)) {
-                throw new ValidationException(key + " field is duplicated in object", --i);
+                throw new JsonValidationException(key + " field is duplicated in object", --i);
             }
             // step 5
             while (i < json.length) {
@@ -78,18 +78,18 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                     if (character == ':') {
                         break;
                     } else {
-                        throw new ValidationException("Unexpected character", --i);
+                        throw new JsonValidationException("Unexpected character", --i);
                     }
                 }
             }
             // step 6
-            Schema propertySchema = schema.getProperty(key);
+            JsonSchema propertySchema = schema.getProperty(key);
             processedFields.add(key);
             if (propertySchema == null) {
-                throw new ValidationException("Object has a prohibited field", --i);
+                throw new JsonValidationException("Object has a prohibited field", --i);
             }
             i = jsonValidator.validate(json, i, propertySchema);
-            if (propertySchema.isRequired())
+            if (schema.getDependentRequired().contains(key))
                 processedRequiredProps++;
             // step 7
             while (i < json.length) {
@@ -98,14 +98,14 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                     if (character == ',')
                         break;
                     if (character == '}') {
-                        if (schema.getRequiredPropertiesCount() != processedRequiredProps) {
-                            throw new ValidationException("All required fields have to be declared in object", --i);
+                        if (schema.getDependentRequired().size() != processedRequiredProps) {
+                            throw new JsonValidationException("All required fields have to be declared in object", --i);
                         }
                         return i;
                     }
                 }
             }
         }
-        throw new ValidationException("Object doesn't end properly", --i);
+        throw new JsonValidationException("Object doesn't end properly", --i);
     }
 }

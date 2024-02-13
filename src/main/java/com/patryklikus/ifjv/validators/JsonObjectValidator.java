@@ -1,7 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
-import com.patryklikus.ifjv.schemas.ObjectSchema;
+import com.patryklikus.ifjv.schemas.models.ObjectSchema;
 
 public interface JsonObjectValidator {
     /**
@@ -19,7 +19,7 @@ public interface JsonObjectValidator {
      * @param i      index from we should start validation
      * @param schema on the basis of which we validate
      * @return index of the first char after the object
-     * @throws ValidationException if JSON is invalid
+     * @throws JsonValidationException if JSON is invalid
      */
-    int validateObject(char[] json, int i, ObjectSchema schema) throws ValidationException;
+    int validate(char[] json, int i, ObjectSchema schema) throws JsonValidationException;
 }
