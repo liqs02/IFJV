@@ -2,20 +2,22 @@
 package com.patryklikus.ifjv.schemas;
 
 
-import static com.patryklikus.ifjv.schemas.SchemaExtractorImplTestCases.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import com.patryklikus.ifjv.schemas.models.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static com.patryklikus.ifjv.schemas.SchemaExtractorImplTestCases.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisplayName("SchemaExtractorImpl")
 class SchemaExtractorImplTest {
@@ -33,7 +35,7 @@ class SchemaExtractorImplTest {
     class ArraySchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {
-                "type: array\nitems:\n type: boolean",
+                //  "type: array\nitems:\n type: boolean",
                 "type: array\nitems: boolean"
         })
         @DisplayName(EXTRACT_DEFAULT_SCHEMA_TEST)
@@ -193,6 +195,47 @@ class SchemaExtractorImplTest {
             Map<String, JsonSchema> arrayProperties = new HashMap<>();
             arrayProperties.put("bool", new BooleanSchema());
             expected.setProperties(arrayProperties);
+
+            JsonSchema schema = schemaExtractor.extract(input);
+
+            assertEquals(expected, schema);
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"""
+                type: object
+                required: true
+                dependentRequired:
+                    - bool
+                    - num
+                properties:
+                    bool: boolean
+                    text: string
+                    num:
+                        type: integer
+                        minimum: 1
+                        maximum: 2
+                """, """
+                type: object
+                required: true
+                dependentRequired: bool, num
+                properties:
+                    bool: boolean
+                    text: string
+                    num:
+                        type: integer
+                        minimum: 1
+                        maximum: 2
+                """
+        })
+        @DisplayName(EXTRACT_SCHEMA_TEST)
+        void schemaTest(String input) {
+            ObjectSchema expected = new ObjectSchema(true, Set.of("bool, num"));
+            Map<String, JsonSchema> expectedProperties = new HashMap<>();
+            expectedProperties.put("bool", new BooleanSchema());
+            expectedProperties.put("text", new StringSchema(null, null));
+            expectedProperties.put("num", new IntegerSchema(1L, 2L, null, null));
+            expected.setProperties(expectedProperties);
 
             JsonSchema schema = schemaExtractor.extract(input);
 

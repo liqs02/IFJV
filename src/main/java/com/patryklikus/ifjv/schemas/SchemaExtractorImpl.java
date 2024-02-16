@@ -7,14 +7,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.patryklikus.ifjv.schemas.models.*;
 import com.patryklikus.ifjv.utils.JsonDataType;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class SchemaExtractorImpl implements SchemaExtractor {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaExtractorImpl.class);
@@ -28,7 +31,7 @@ public class SchemaExtractorImpl implements SchemaExtractor {
 
     public JsonSchema extract(String yamlSchema) throws InvalidJsonSchemaException {
         try {
-            JsonNode schema = mapper.readTree(yamlSchema);
+            ObjectNode schema = mapper.readValue(yamlSchema, ObjectNode.class);
             return extract(schema);
         } catch (JsonProcessingException | RuntimeException e) {
             LOG.warn("Invalid schema", e);
@@ -36,8 +39,17 @@ public class SchemaExtractorImpl implements SchemaExtractor {
         }
     }
 
-    private JsonSchema extract(@NonNull JsonNode schema) throws JsonProcessingException {
-        JsonDataType type = mapper.convertValue(schema.get("type"), JsonDataType.class);
+    private JsonSchema extract(@NonNull ObjectNode schema) throws JsonProcessingException {
+        JsonDataType type;
+        if (schema.isTextual()) { // if just type is provided
+            String textType = schema.textValue();
+            if (!Objects.equals(textType, textType.toLowerCase()))
+                throw new IllegalArgumentException("type has to be lowercase");
+            type = JsonDataType.valueOf(textType.toUpperCase());
+            schema = mapper.convertValue(Map.of("type", textType), ObjectNode.class);
+        } else {
+            type = mapper.convertValue(schema.get("type"), JsonDataType.class);
+        }
         return switch (type) {
             case ARRAY -> extractArraySchema(schema);
             case BOOLEAN -> mapper.convertValue(schema, BooleanSchema.class);
@@ -48,28 +60,35 @@ public class SchemaExtractorImpl implements SchemaExtractor {
         };
     }
 
-    private ArraySchema extractArraySchema(@NonNull JsonNode schema) throws JsonProcessingException {
+    private ArraySchema extractArraySchema(@NonNull ObjectNode schema) throws JsonProcessingException {
         JsonNode itemsJson = schema.get("items");
+        if (itemsJson.isTextual()) {
+            schema.put("type", itemsJson.textValue());
+        }
         if (itemsJson == null)
             throw new IllegalArgumentException("items must be defined");
-        JsonSchema itemsSchema;
-        if (itemsJson.isTextual()) { // if just type is provided
-            JsonNode justType = mapper.readTree("type: " + itemsJson.textValue());
-            itemsSchema = extract(justType);
-        } else {
-            itemsSchema = extract(itemsJson);
-        }
+        System.out.println(itemsJson);
+        JsonSchema itemsSchema = extract(schema);
 
         ArraySchema arraySchema = mapper.convertValue(schema, ArraySchema.class);
         arraySchema.setItems(itemsSchema);
         return arraySchema;
     }
 
-    private ObjectSchema extractObjectSchema(@NonNull JsonNode schema) throws JsonProcessingException {
-        Map<String, JsonNode> properties = mapper.convertValue(schema.get("properties"), new TypeReference<>() {
+    private ObjectSchema extractObjectSchema(@NonNull ObjectNode schema) throws JsonProcessingException {
+        Map<String, ObjectNode> properties = mapper.convertValue(schema.get("properties"), new TypeReference<>() {
         });
         if (properties == null)
             throw new IllegalArgumentException("properties must be defined");
+
+        ArrayNode dependentRequired = schema.withArray("dependentRequired");
+        if (dependentRequired.isTextual()) {
+            Set<String> dependentRequiredSet = Arrays.stream(dependentRequired.textValue().split(","))
+                    .map(String::trim)
+                    .collect(Collectors.toSet());
+            schema.putPOJO("dependentRequired", dependentRequiredSet);
+        }
+
         var propertiesSchemas = new HashMap<String, JsonSchema>();
         for (var key : properties.keySet()) {
             var value = extract(properties.get(key));

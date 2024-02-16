@@ -4,16 +4,15 @@ package com.patryklikus.ifjv.schemas.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.utils.JsonDataType;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 
-@EqualsAndHashCode
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+
 @Getter
 @ToString
 public class ObjectSchema implements JsonSchema {
@@ -43,5 +42,21 @@ public class ObjectSchema implements JsonSchema {
         if (properties == null)
             throw new IllegalArgumentException("properties must be defined");
         this.properties = properties;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ObjectSchema that)) return false;
+        return required == that.required
+                && dependentRequired.size() == that.dependentRequired.size()
+                && dependentRequired.containsAll(that.dependentRequired)
+                && properties.size() == that.getProperties().size()
+                && properties.entrySet().containsAll(that.getProperties().entrySet());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(required, dependentRequired, properties);
     }
 }
