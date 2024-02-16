@@ -2,10 +2,10 @@
 package com.patryklikus.ifjv.utils;
 
 public enum JsonDataType {
+    ARRAY,
     BOOLEAN,
     INTEGER,
     NUMBER,
-    STRING,
     OBJECT,
-    ARRAY,
+    STRING,
 }

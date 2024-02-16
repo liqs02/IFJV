@@ -18,44 +18,64 @@ import org.slf4j.LoggerFactory;
 
 public class SchemaExtractorImpl implements SchemaExtractor {
     private static final Logger LOG = LoggerFactory.getLogger(SchemaExtractorImpl.class);
-    private final ObjectMapper yamlMapper;
+    private final ObjectMapper mapper;
 
     public SchemaExtractorImpl() {
-        yamlMapper = JsonMapper.builder(new YAMLFactory())
+        mapper = JsonMapper.builder(new YAMLFactory())
                 .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
                 .build();
     }
 
     public JsonSchema extract(String yamlSchema) throws InvalidJsonSchemaException {
         try {
-            JsonNode schema = yamlMapper.readTree(yamlSchema);
+            JsonNode schema = mapper.readTree(yamlSchema);
             return extract(schema);
-        } catch (JsonProcessingException e) {
-            LOG.warn("Invalid YAML schema", e);
+        } catch (JsonProcessingException | RuntimeException e) {
+            LOG.warn("Invalid schema", e);
             throw new InvalidJsonSchemaException(e);
         }
     }
 
-    private JsonSchema extract(@NonNull JsonNode schema) {
-        return switch (yamlMapper.convertValue(schema.get("type"), JsonDataType.class)) {
-            case BOOLEAN -> yamlMapper.convertValue(schema, BooleanSchema.class);
-            case INTEGER -> yamlMapper.convertValue(schema, IntegerSchema.class);
-            case NUMBER -> yamlMapper.convertValue(schema, NumberSchema.class);
-            case STRING -> yamlMapper.convertValue(schema, StringSchema.class);
+    private JsonSchema extract(@NonNull JsonNode schema) throws JsonProcessingException {
+        JsonDataType type = mapper.convertValue(schema.get("type"), JsonDataType.class);
+        return switch (type) {
+            case ARRAY -> extractArraySchema(schema);
+            case BOOLEAN -> mapper.convertValue(schema, BooleanSchema.class);
+            case INTEGER -> mapper.convertValue(schema, IntegerSchema.class);
+            case NUMBER -> mapper.convertValue(schema, NumberSchema.class);
             case OBJECT -> extractObjectSchema(schema);
-            case ARRAY -> yamlMapper.convertValue(schema, ArraySchema.class);
+            case STRING -> mapper.convertValue(schema, StringSchema.class);
         };
     }
 
-    private ObjectSchema extractObjectSchema(@NonNull JsonNode schema) {
-        var properties = yamlMapper.convertValue(schema.get("properties"), new TypeReference<Map<String, JsonNode>>() {
+    private ArraySchema extractArraySchema(@NonNull JsonNode schema) throws JsonProcessingException {
+        JsonNode itemsJson = schema.get("items");
+        if (itemsJson == null)
+            throw new IllegalArgumentException("items must be defined");
+        JsonSchema itemsSchema;
+        if (itemsJson.isTextual()) { // if just type is provided
+            JsonNode justType = mapper.readTree("type: " + itemsJson.textValue());
+            itemsSchema = extract(justType);
+        } else {
+            itemsSchema = extract(itemsJson);
+        }
+
+        ArraySchema arraySchema = mapper.convertValue(schema, ArraySchema.class);
+        arraySchema.setItems(itemsSchema);
+        return arraySchema;
+    }
+
+    private ObjectSchema extractObjectSchema(@NonNull JsonNode schema) throws JsonProcessingException {
+        Map<String, JsonNode> properties = mapper.convertValue(schema.get("properties"), new TypeReference<>() {
         });
+        if (properties == null)
+            throw new IllegalArgumentException("properties must be defined");
         var propertiesSchemas = new HashMap<String, JsonSchema>();
         for (var key : properties.keySet()) {
             var value = extract(properties.get(key));
             propertiesSchemas.put(key, value);
         }
-        var objectSchema = yamlMapper.convertValue(schema, ObjectSchema.class);
+        ObjectSchema objectSchema = mapper.convertValue(schema, ObjectSchema.class);
         objectSchema.setProperties(propertiesSchemas);
         return objectSchema;
     }

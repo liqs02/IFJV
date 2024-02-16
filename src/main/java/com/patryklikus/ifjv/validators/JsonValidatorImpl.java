@@ -11,7 +11,7 @@ public class JsonValidatorImpl implements JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidatorImpl.class);
     private final JsonBooleanValidator booleanValidator;
     private final JsonNumberValidator numberValidator;
-    private final JsonStringValidatorImpl stringValidator;
+    private final JsonStringValidator stringValidator;
     private final JsonObjectValidator objectValidator;
     private final JsonArrayValidator arrayValidator;
 
@@ -25,7 +25,6 @@ public class JsonValidatorImpl implements JsonValidator {
 
     @Override
     public Optional<String> validate(char[] json, JsonSchema schema) {
-        // todo required doesn't work if property is not inside object
         try {
             int i = validate(json, 0, schema);
             for (; i < json.length; i++) {
@@ -46,12 +45,12 @@ public class JsonValidatorImpl implements JsonValidator {
 
     int validate(char[] json, int i, JsonSchema schema) throws JsonValidationException {
         return switch (schema.getType()) {
+            case ARRAY -> arrayValidator.validate(json, i, (ArraySchema) schema);
             case BOOLEAN -> booleanValidator.validate(json, i);
             case INTEGER -> numberValidator.validate(json, i, (IntegerSchema) schema);
             case NUMBER -> numberValidator.validate(json, i, (NumberSchema) schema);
-            case STRING -> stringValidator.validate(json, i, (StringSchema) schema);
             case OBJECT -> objectValidator.validate(json, i, (ObjectSchema) schema);
-            case ARRAY -> arrayValidator.validate(json, i, (ArraySchema) schema);
+            case STRING -> stringValidator.validate(json, i, (StringSchema) schema);
         };
     }
 }

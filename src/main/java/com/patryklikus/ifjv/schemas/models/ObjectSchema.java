@@ -8,16 +8,18 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
+import lombok.ToString;
 
+@EqualsAndHashCode
 @Getter
+@ToString
 public class ObjectSchema implements JsonSchema {
     private final boolean required;
     private final Set<String> dependentRequired;
     @JsonIgnore
-    @Setter
     private Map<String, JsonSchema> properties;
 
     public ObjectSchema(
@@ -35,5 +37,11 @@ public class ObjectSchema implements JsonSchema {
     @Override
     public JsonDataType getType() {
         return JsonDataType.OBJECT;
+    }
+
+    public void setProperties(Map<String, JsonSchema> properties) {
+        if (properties == null)
+            throw new IllegalArgumentException("properties must be defined");
+        this.properties = properties;
     }
 }

@@ -4,9 +4,13 @@ package com.patryklikus.ifjv.schemas.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.utils.JsonDataType;
 import java.util.Objects;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
+@EqualsAndHashCode
 @Getter
+@ToString
 public class IntegerSchema implements JsonSchema {
     private final long minimum;
     private final long maximum;
@@ -27,6 +31,8 @@ public class IntegerSchema implements JsonSchema {
             maximum = exclusiveMaximum - 1;
         this.minimum = Objects.requireNonNullElse(minimum, Long.MIN_VALUE);
         this.maximum = Objects.requireNonNullElse(maximum, Long.MAX_VALUE);
+        if (this.minimum >= this.maximum)
+            throw new IllegalArgumentException("Minimum value can't be higher than maximum");
     }
 
     @Override
