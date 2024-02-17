@@ -106,6 +106,9 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
                 }
             }
         }
-        throw new JsonValidationException("Object doesn't end properly", --i);
+        if (schema.isRequired())
+            throw new JsonValidationException("Required object isn't defined", i);
+        else
+            return i;
     }
 }

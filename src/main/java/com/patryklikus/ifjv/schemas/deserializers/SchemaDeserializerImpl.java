@@ -4,7 +4,7 @@ package com.patryklikus.ifjv.schemas.deserializers;
 import com.google.gson.*;
 import com.patryklikus.ifjv.schemas.models.*;
 import com.patryklikus.ifjv.utils.GsonUtils;
-import com.patryklikus.ifjv.utils.JsonDataType;
+import com.patryklikus.ifjv.utils.JsonElementType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 import lombok.NonNull;
@@ -51,7 +51,7 @@ public class SchemaDeserializerImpl implements SchemaDeserializer, JsonDeseriali
         String type = GsonUtils.getStringMemberSafe(schemaObject, "type");
 
         assert type != null;
-        return switch (JsonDataType.valueOf(type.toUpperCase())) {
+        return switch (JsonElementType.valueOf(type.toUpperCase())) {
             case ARRAY -> gson.fromJson(schemaObject, ArraySchema.class);
             case BOOLEAN -> gson.fromJson(schemaObject, BooleanSchema.class);
             case INTEGER -> gson.fromJson(schemaObject, IntegerSchema.class);

@@ -1,7 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.utils;
 
-public enum JsonDataType {
+public enum JsonElementType {
     ARRAY,
     BOOLEAN,
     INTEGER,

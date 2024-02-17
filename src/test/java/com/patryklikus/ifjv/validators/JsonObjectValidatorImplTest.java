@@ -13,7 +13,6 @@ import com.patryklikus.ifjv.schemas.models.JsonSchema;
 import com.patryklikus.ifjv.schemas.models.ObjectSchema;
 import java.util.Map;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -57,9 +56,13 @@ class JsonObjectValidatorImplTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "{}", "{\"num\": x}", "{\"num\": 1}",
-            "{ \"bool\": true, \"bool\": false }"
+    @ValueSource(strings = {"{}", " ", """
+            {"num": x}
+            """, """
+            {"num": 1}
+            """, """
+            { "bool": true, "bool": false }
+            """
     })
     @DisplayName(INVALIDATE_JSON_TEST)
     void invalidateTest(String stringInput) {
@@ -71,7 +74,7 @@ class JsonObjectValidatorImplTest {
                 "bool", booleanSchema,
                 "num", integerSchema
         );
-        ObjectSchema schema = new ObjectSchema(false, Set.of("bool"), properties);
+        ObjectSchema schema = new ObjectSchema(true, Set.of("bool"), properties);
 
         assertThrows(JsonValidationException.class, () -> jsonObjectValidator.validate(input, 0, schema));
     }
