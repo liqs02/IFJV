@@ -5,10 +5,11 @@ import com.patryklikus.ifjv.schemas.models.IntegerSchema;
 import com.patryklikus.ifjv.schemas.models.NumberSchema;
 import com.patryklikus.ifjv.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
+import lombok.NonNull;
 
 class JsonNumberValidatorImpl implements JsonNumberValidator {
     @Override
-    public int validate(char[] json, int i, IntegerSchema schema) throws JsonValidationException {
+    public int validate(char[] json, int i, @NonNull IntegerSchema schema) throws JsonValidationException {
         while (i < json.length && CharUtils.isWhiteSpace(json[i]))
             i++;
 
@@ -34,7 +35,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
     }
 
     @Override
-    public int validate(char[] json, int i, NumberSchema schema) throws JsonValidationException {
+    public int validate(char[] json, int i, @NonNull NumberSchema schema) throws JsonValidationException {
         for (; i < json.length; i++) {
             if (!CharUtils.isWhiteSpace(json[i]))
                 break;

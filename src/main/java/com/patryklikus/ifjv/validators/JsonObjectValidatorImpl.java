@@ -71,6 +71,7 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             if (processedFields.contains(key)) {
                 throw new JsonValidationException(key + " field is duplicated in object", --i);
             }
+            processedFields.add(key);
             // step 5
             while (i < json.length) {
                 char character = json[i++];
@@ -84,7 +85,6 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             }
             // step 6
             JsonSchema propertySchema = schema.getProperty(key);
-            processedFields.add(key);
             if (propertySchema == null) {
                 throw new JsonValidationException("Object has a prohibited field", --i);
             }
