@@ -28,11 +28,6 @@ class JsonObjectValidatorImplTest {
     private JsonValidatorImpl jsonValidator;
     private JsonObjectValidator jsonObjectValidator;
 
-    @BeforeEach
-    void setUp() {
-        jsonObjectValidator = new JsonObjectValidatorImpl(jsonValidator);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {"""
             : { "bool" : true, "num": 1 }
@@ -42,6 +37,7 @@ class JsonObjectValidatorImplTest {
     })
     @DisplayName(VALIDATE_JSON_TEST)
     void validateTest(String stringInput) throws JsonValidationException {
+        jsonObjectValidator = new JsonObjectValidatorImpl(jsonValidator);
         char[] input = stringInput.toCharArray();
         int expected = stringInput.lastIndexOf('}') + 1;
         BooleanSchema booleanSchema = new BooleanSchema();
