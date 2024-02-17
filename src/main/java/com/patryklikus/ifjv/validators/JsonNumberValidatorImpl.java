@@ -5,10 +5,11 @@ import com.patryklikus.ifjv.schemas.models.IntegerSchema;
 import com.patryklikus.ifjv.schemas.models.NumberSchema;
 import com.patryklikus.ifjv.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
+import lombok.NonNull;
 
 class JsonNumberValidatorImpl implements JsonNumberValidator {
     @Override
-    public int validate(char[] json, int i, IntegerSchema schema) throws JsonValidationException {
+    public int validate(char[] json, int i, @NonNull IntegerSchema schema) throws JsonValidationException {
         while (i < json.length && CharUtils.isWhiteSpace(json[i]))
             i++;
 
@@ -16,12 +17,14 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
         char character = json[i++];
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
+        else
+            throw new JsonValidationException("illegal character", --i);
 
         while (i < json.length) {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 validateRange(charList, schema, --i);
                 return i;
             } else {
@@ -32,7 +35,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
     }
 
     @Override
-    public int validate(char[] json, int i, NumberSchema schema) throws JsonValidationException {
+    public int validate(char[] json, int i, @NonNull NumberSchema schema) throws JsonValidationException {
         for (; i < json.length; i++) {
             if (!CharUtils.isWhiteSpace(json[i]))
                 break;
@@ -42,13 +45,15 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
         char character = json[i++];
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
+        else
+            throw new JsonValidationException("illegal character", --i);
 
         while (i < json.length) {
             character = json[i++];
             charList.add(character);
             if (character == '.') {
                 break;
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 return i;
             } else if (CharUtils.isNotDigit(character)) {
                 throw new JsonValidationException("Invalid double", --i);
@@ -59,7 +64,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 validateRange(charList, schema, --i);
                 return i;
             } else {

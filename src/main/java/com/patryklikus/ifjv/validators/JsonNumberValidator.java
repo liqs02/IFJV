@@ -5,7 +5,7 @@ import com.patryklikus.ifjv.schemas.models.IntegerSchema;
 import com.patryklikus.ifjv.schemas.models.NumberSchema;
 import lombok.NonNull;
 
-public interface JsonNumberValidator {
+public interface JsonNumberValidator extends JsonElementValidator {
     /**
      * @param json  which we validate
      * @param index from we should start validation

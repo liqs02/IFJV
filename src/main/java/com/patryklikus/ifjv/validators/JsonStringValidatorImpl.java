@@ -12,8 +12,9 @@ class JsonStringValidatorImpl implements JsonStringValidator {
             char character = json[i++];
             if (!CharUtils.isWhiteSpace(character)) {
                 int[] indexPointer = new int[1];
-                indexPointer[0] = i;
+                indexPointer[0] = i - 1;
                 validateLength(CharUtils.extractString(json, indexPointer), schema, --i);
+                System.out.println(json[indexPointer[0]]);
                 return indexPointer[0];
             }
         }

@@ -3,9 +3,11 @@ package com.patryklikus.ifjv.validators;
 
 import com.patryklikus.ifjv.schemas.models.*;
 import com.patryklikus.ifjv.utils.CharUtils;
-import java.util.Optional;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
 
 public class JsonValidatorImpl implements JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidatorImpl.class);
@@ -24,23 +26,23 @@ public class JsonValidatorImpl implements JsonValidator {
     }
 
     @Override
-    public Optional<String> validate(char[] json, JsonSchema schema) {
+    @Nullable
+    public String validate(char[] json, @NonNull JsonSchema schema) {
         try {
             int i = validate(json, 0, schema);
             for (; i < json.length; i++) {
                 char character = json[i];
                 if (!CharUtils.isWhiteSpace(character)) {
-                    String message = String.format("Unexpected character at %d index", i);
-                    return Optional.of(message);
+                    return String.format("Unexpected character at %d index", i);
                 }
             }
         } catch (JsonValidationException e) {
-            return Optional.of(e.getMessage());
+            return e.getMessage();
         } catch (RuntimeException e) {
             LOG.warn("Unexpected validation error", e);
-            return Optional.of("Invalid JSON");
+            return "Invalid JSON";
         }
-        return Optional.empty();
+        return null;
     }
 
     int validate(char[] json, int i, JsonSchema schema) throws JsonValidationException {

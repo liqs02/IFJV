@@ -1,7 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.schemas.models;
 
-import com.patryklikus.ifjv.utils.JsonDataType;
+import com.patryklikus.ifjv.utils.JsonElementType;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -30,7 +30,7 @@ public class NumberSchema implements JsonSchema {
     }
 
     @Override
-    public JsonDataType getType() {
-        return JsonDataType.NUMBER;
+    public JsonElementType getType() {
+        return JsonElementType.NUMBER;
     }
 }

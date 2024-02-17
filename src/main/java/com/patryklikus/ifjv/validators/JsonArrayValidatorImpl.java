@@ -26,12 +26,15 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
         for (; i < json.length; i++) {
             char character = json[i];
             if (!CharUtils.isWhiteSpace(character)) {
-                if (character == ']')
+                if (character == ']') {
                     if (schema.getMinItems() > 0) {
                         throw new JsonValidationException("Array is empty but should contain at least " + schema.getMinItems() + " items", i);
                     } else {
-                        break;
+                        return ++i;
                     }
+                } else {
+                    break;
+                }
             }
         }
 
