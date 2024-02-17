@@ -16,12 +16,14 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
         char character = json[i++];
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
+        else
+            throw new JsonValidationException("illegal character", --i);
 
         while (i < json.length) {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 validateRange(charList, schema, --i);
                 return i;
             } else {
@@ -42,13 +44,15 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
         char character = json[i++];
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
+        else
+            throw new JsonValidationException("illegal character", --i);
 
         while (i < json.length) {
             character = json[i++];
             charList.add(character);
             if (character == '.') {
                 break;
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 return i;
             } else if (CharUtils.isNotDigit(character)) {
                 throw new JsonValidationException("Invalid double", --i);
@@ -59,7 +63,7 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             character = json[i++];
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
-            } else if (CharUtils.isWhiteSpace(character) || character == ',') {
+            } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
                 validateRange(charList, schema, --i);
                 return i;
             } else {

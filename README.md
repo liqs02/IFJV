@@ -1,6 +1,6 @@
 # Incredibly Fast Json Validator
 
-Note: project is still in development.
+Note: project is still in development. In the `issues` section, you can see future features.
 
 IFJV provides fast json validation in java using a defined schema. The scalability of the algorithm is close to O(n),
 where n is equal to the number of characters in the json. Currently it supports only strongly typed json schema.

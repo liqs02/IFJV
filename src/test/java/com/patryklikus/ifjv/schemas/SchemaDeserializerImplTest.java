@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.patryklikus.ifjv.schemas.SchemaDeserializerImplTestCases.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static com.patryklikus.ifjv.schemas.SchemaDeserializerImplTestCases.*;
 
 @DisplayName("SchemaExtractorImpl")
 class SchemaDeserializerImplTest {
