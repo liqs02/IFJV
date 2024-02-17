@@ -36,7 +36,7 @@ class SchemaDeserializerImplTest {
     class ArraySchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {
-                //  "type: array\nitems:\n type: boolean",
+                "type: array\nitems:\n type: boolean",
                 "type: array\nitems: boolean"
         })
         @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
@@ -81,11 +81,10 @@ class SchemaDeserializerImplTest {
     @Nested
     @DisplayName("BooleanSchema")
     class BooleanSchemaTests {
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"type: boolean", "boolean"})
         @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
-        void schemaTest() {
-            String input = "type: boolean";
-
+        void schemaTest(String input) {
             JsonSchema schema = schemaDeserializer.deserialize(input);
 
             assertNotNull(schema);
@@ -95,12 +94,13 @@ class SchemaDeserializerImplTest {
     @Nested
     @DisplayName("IntegerSchema")
     class IntegerSchemaTests {
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"type: integer", "integer"})
         @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
-        void defaultSchemaTest() {
+        void defaultSchemaTest(String input) {
             var expected = new IntegerSchema(Long.MIN_VALUE, Long.MAX_VALUE, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize("type: integer");
+            JsonSchema schema = schemaDeserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -136,12 +136,13 @@ class SchemaDeserializerImplTest {
     @Nested
     @DisplayName("NumberSchema")
     class NumberSchemaTests {
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"type: number", "number"})
         @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
-        void defaultSchemaTest() {
+        void defaultSchemaTest(String input) {
             var expected = new NumberSchema(Double.MIN_VALUE, Double.MAX_VALUE, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize("type: number");
+            JsonSchema schema = schemaDeserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -257,12 +258,13 @@ class SchemaDeserializerImplTest {
     @Nested
     @DisplayName("StringSchema")
     class StringSchemaTests {
-        @Test
+        @ParameterizedTest
+        @ValueSource(strings = {"type: string", "string"})
         @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
-        void defaultSchemaTest() {
+        void defaultSchemaTest(String input) {
             var expected = new StringSchema(0, Integer.MAX_VALUE);
 
-            JsonSchema schema = schemaDeserializer.deserialize("type: string");
+            JsonSchema schema = schemaDeserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
