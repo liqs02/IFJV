@@ -1,3 +1,4 @@
+/* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.validators;
 
 class JsonValidatorTestCases {
