@@ -1,7 +1,6 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.ifjv.schemas.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.patryklikus.ifjv.utils.JsonDataType;
 import java.util.Objects;
 import lombok.EqualsAndHashCode;
@@ -15,12 +14,7 @@ public class NumberSchema implements JsonSchema {
     private final double minimum;
     private final double maximum;
 
-    public NumberSchema(
-            @JsonProperty("minimum") Double minimum,
-            @JsonProperty("maximum") Double maximum,
-            @JsonProperty("exclusiveMinimum") Double exclusiveMinimum,
-            @JsonProperty("exclusiveMaximum") Double exclusiveMaximum
-    ) {
+    public NumberSchema(Double minimum, Double maximum, Double exclusiveMinimum, Double exclusiveMaximum) {
         if (minimum != null && exclusiveMinimum != null)
             throw new IllegalArgumentException("minimum and exclusiveMinimum can't be defined together");
         if (exclusiveMinimum != null)
