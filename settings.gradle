@@ -1,2 +1,4 @@
 rootProject.name = 'IFJV'
+include 'library'
 include 'benchmark'
+

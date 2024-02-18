@@ -1,20 +1,29 @@
-/*repositories {
-    mavenCentral()
+plugins {
+    id 'java'
 }
 
 ext {
-
-    jmhVersion = '1.36'
+    jmhVersion = '1.37'
 }
 
-group = 'com.patryklikus'
-version = '0.0'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     annotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion"
-
     implementation(
+            project(':library'),
             "org.openjdk.jmh:jmh-core:$jmhVersion",
-            "org.openjdk.jmh:jmh-generator-annprocess:$jmhVersion",
     )
-}*/
+}
+
+test {
+    useJUnitPlatform()
+}
