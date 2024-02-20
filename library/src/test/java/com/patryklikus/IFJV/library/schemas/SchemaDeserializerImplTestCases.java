@@ -1,11 +1,11 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.schemas;
 
-import com.patryklikus.IFJV.library.schemas.deserializers.InvalidJsonSchemaException;
-import com.patryklikus.IFJV.library.schemas.deserializers.SchemaDeserializer;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import com.patryklikus.IFJV.library.schemas.deserializers.InvalidJsonSchemaException;
+import com.patryklikus.IFJV.library.schemas.deserializers.SchemaDeserializer;
 
 
 class SchemaDeserializerImplTestCases {

@@ -35,10 +35,9 @@ class JsonObjectValidatorImplTest {
             """
     })
     @DisplayName(VALIDATE_JSON_TEST)
-    void validateTest(String stringInput) throws JsonValidationException {
+    void validateTest(String input) throws JsonValidationException {
         jsonObjectValidator = new JsonObjectValidatorImpl(jsonValidator);
-        char[] input = stringInput.toCharArray();
-        int expected = stringInput.lastIndexOf('}') + 1;
+        int expected = input.lastIndexOf('}') + 1;
         BooleanSchema booleanSchema = new BooleanSchema();
         IntegerSchema integerSchema = new IntegerSchema(null, null, null, null);
         Map<String, JsonSchema> properties = Map.of(
@@ -47,7 +46,7 @@ class JsonObjectValidatorImplTest {
         );
         ObjectSchema schema = new ObjectSchema(false, Set.of("bool"), properties);
         when(jsonValidator.validate(input, 12, booleanSchema)).thenReturn(17);
-        if (stringInput.contains("num"))
+        if (input.contains("num"))
             when(jsonValidator.validate(input, 25, integerSchema)).thenReturn(27);
 
         int result = jsonObjectValidator.validate(input, 1, schema);
@@ -65,9 +64,8 @@ class JsonObjectValidatorImplTest {
             """
     })
     @DisplayName(INVALIDATE_JSON_TEST)
-    void invalidateTest(String stringInput) {
+    void invalidateTest(String input) {
         jsonObjectValidator = new JsonObjectValidatorImpl(new JsonValidatorImpl());
-        char[] input = stringInput.toCharArray();
         BooleanSchema booleanSchema = new BooleanSchema();
         IntegerSchema integerSchema = new IntegerSchema(null, null, null, null);
         Map<String, JsonSchema> properties = Map.of(

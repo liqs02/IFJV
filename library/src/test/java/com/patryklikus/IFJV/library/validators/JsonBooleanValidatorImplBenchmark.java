@@ -6,7 +6,6 @@ import static com.patryklikus.IFJV.library.validators.JsonValidatorTestCases.VAL
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.patryklikus.IFJV.library.schemas.models.*;
-import com.patryklikus.IFJV.library.schemas.models.*;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;

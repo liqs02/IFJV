@@ -5,7 +5,6 @@ import static com.patryklikus.IFJV.library.schemas.SchemaDeserializerImplTestCas
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.patryklikus.IFJV.library.schemas.models.*;
 import com.patryklikus.IFJV.library.schemas.deserializers.SchemaDeserializer;
 import com.patryklikus.IFJV.library.schemas.deserializers.SchemaDeserializerImpl;
 import com.patryklikus.IFJV.library.schemas.models.*;

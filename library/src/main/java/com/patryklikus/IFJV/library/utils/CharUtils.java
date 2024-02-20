@@ -14,12 +14,12 @@ public final class CharUtils {
      * @param index array with one value (index) which will be updated
      * @return extracted string as char linked list
      */
-    public static TCharLinkedList extractString(char[] json, int[] index) throws JsonValidationException {
+    public static TCharLinkedList extractString(String json, int[] index) throws JsonValidationException {
         var charList = new TCharLinkedList();
         int i = index[0];
 
-        while (i < json.length) {
-            char character = json[i++];
+        while (i < json.length()) {
+            char character = json.charAt(i++);
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == '"')
                     break;
@@ -28,10 +28,10 @@ public final class CharUtils {
             }
         }
 
-        while (i < json.length) {
-            char character = json[i++];
+        while (i < json.length()) {
+            char character = json.charAt(i++);
             if (character == '\\') {
-                character = json[++i];
+                character = json.charAt(++i);
                 charList.add(character);
             } else if (character == '"') {
                 index[0] = i;

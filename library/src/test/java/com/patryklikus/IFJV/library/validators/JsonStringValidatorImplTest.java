@@ -28,7 +28,7 @@ class JsonStringValidatorImplTest {
                 """;
         StringSchema schema = new StringSchema(1, 4);
 
-        int result = jsonStringValidator.validate(input.toCharArray(), 1, schema);
+        int result = jsonStringValidator.validate(input, 1, schema);
 
         assertEquals(9, result);
     }
@@ -41,7 +41,7 @@ class JsonStringValidatorImplTest {
                 """;
         StringSchema schema = new StringSchema(1, 4);
 
-        int result = jsonStringValidator.validate(input.toCharArray(), 1, schema);
+        int result = jsonStringValidator.validate(input, 1, schema);
 
         assertEquals(6, result);
     }
@@ -54,6 +54,6 @@ class JsonStringValidatorImplTest {
     void invalidateTest(String input) {
         StringSchema schema = new StringSchema(2, 3);
 
-        assertThrows(JsonValidationException.class, () -> jsonStringValidator.validate(input.toCharArray(), 0, schema));
+        assertThrows(JsonValidationException.class, () -> jsonStringValidator.validate(input, 0, schema));
     }
 }

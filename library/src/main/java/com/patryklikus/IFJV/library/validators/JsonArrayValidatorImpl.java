@@ -12,9 +12,9 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
     }
 
     @Override
-    public int validate(char[] json, int i, ArraySchema schema) throws JsonValidationException {
-        while (i < json.length) {
-            char character = json[i++];
+    public int validate(String json, int i, ArraySchema schema) throws JsonValidationException {
+        while (i < json.length()) {
+            char character = json.charAt(i++);
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == '[')
                     break;
@@ -23,8 +23,8 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
             }
         }
 
-        for (; i < json.length; i++) {
-            char character = json[i];
+        for (; i < json.length(); i++) {
+            char character = json.charAt(i);
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == ']') {
                     if (schema.getMinItems() > 0) {
@@ -39,13 +39,13 @@ class JsonArrayValidatorImpl implements JsonArrayValidator {
         }
 
         int size = 1;
-        for (; i < json.length; i++, size++) {
+        for (; i < json.length(); i++, size++) {
             if (schema.getMaxItems() < size) {
                 throw new JsonValidationException("Array should contain at most " + schema.getMaxItems() + " items", i);
             }
             i = jsonValidator.validate(json, i, schema.getItems());
-            while (i < json.length) {
-                char character = json[i++];
+            while (i < json.length()) {
+                char character = json.charAt(i++);
                 if (!CharUtils.isWhiteSpace(character)) {
                     if (character == ',')
                         break;

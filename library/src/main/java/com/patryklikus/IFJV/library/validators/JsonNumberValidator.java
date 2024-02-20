@@ -12,7 +12,7 @@ public interface JsonNumberValidator extends JsonElementValidator {
      * @return index of the first char after the integer
      * @throws JsonValidationException if JSON is invalid
      */
-    int validate(char[] json, int index, @NonNull IntegerSchema schema) throws JsonValidationException;
+    int validate(String json, int index, @NonNull IntegerSchema schema) throws JsonValidationException;
 
     /**
      * @param json which we validate
@@ -20,5 +20,5 @@ public interface JsonNumberValidator extends JsonElementValidator {
      * @return index of the first char after the double
      * @throws JsonValidationException if JSON is invalid
      */
-    int validate(char[] json, int i, @NonNull NumberSchema schema) throws JsonValidationException;
+    int validate(String json, int i, @NonNull NumberSchema schema) throws JsonValidationException;
 }

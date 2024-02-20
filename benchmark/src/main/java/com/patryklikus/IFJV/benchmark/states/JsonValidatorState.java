@@ -1,3 +1,4 @@
+/* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.benchmark.states;
 
 import com.patryklikus.IFJV.library.validators.JsonValidator;

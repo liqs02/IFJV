@@ -7,14 +7,14 @@ import gnu.trove.list.linked.TCharLinkedList;
 
 class JsonStringValidatorImpl implements JsonStringValidator {
     @Override
-    public int validate(char[] json, int i, StringSchema schema) throws JsonValidationException {
-        while (i < json.length) {
-            char character = json[i++];
+    public int validate(String json, int i, StringSchema schema) throws JsonValidationException {
+        while (i < json.length()) {
+            char character = json.charAt(i++);
             if (!CharUtils.isWhiteSpace(character)) {
                 int[] indexPointer = new int[1];
                 indexPointer[0] = i - 1;
                 validateLength(CharUtils.extractString(json, indexPointer), schema, --i);
-                System.out.println(json[indexPointer[0]]);
+                System.out.println(json.charAt(indexPointer[0]));
                 return indexPointer[0];
             }
         }

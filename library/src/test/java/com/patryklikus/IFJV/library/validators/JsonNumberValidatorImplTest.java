@@ -32,7 +32,7 @@ class JsonNumberValidatorImplTest {
         void validateTest(String input) throws JsonValidationException {
             IntegerSchema schema = new IntegerSchema(0L, 3L, null, null);
 
-            int result = jsonNumberValidator.validate(input.toCharArray(), 1, schema);
+            int result = jsonNumberValidator.validate(input, 1, schema);
 
             assertEquals(3, result);
         }
@@ -43,7 +43,7 @@ class JsonNumberValidatorImplTest {
         void invalidateTest(String input) {
             IntegerSchema schema = new IntegerSchema(0L, 2L, null, null);
 
-            assertThrows(JsonValidationException.class, () -> jsonNumberValidator.validate(input.toCharArray(), 0, schema));
+            assertThrows(JsonValidationException.class, () -> jsonNumberValidator.validate(input, 0, schema));
         }
     }
 
@@ -56,7 +56,7 @@ class JsonNumberValidatorImplTest {
         void validateTest(String input) throws JsonValidationException {
             NumberSchema schema = new NumberSchema(0.0, 3.0, null, null);
 
-            int result = jsonNumberValidator.validate(input.toCharArray(), 1, schema);
+            int result = jsonNumberValidator.validate(input, 1, schema);
 
             assertEquals(5, result);
         }
@@ -67,7 +67,7 @@ class JsonNumberValidatorImplTest {
         void invalidateTest(String input) {
             NumberSchema schema = new NumberSchema(0.0, 1.0, null, null);
 
-            assertThrows(JsonValidationException.class, () -> jsonNumberValidator.validate(input.toCharArray(), 0, schema));
+            assertThrows(JsonValidationException.class, () -> jsonNumberValidator.validate(input, 0, schema));
         }
     }
 }

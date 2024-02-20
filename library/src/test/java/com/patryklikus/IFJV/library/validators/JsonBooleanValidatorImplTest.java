@@ -24,7 +24,7 @@ public class JsonBooleanValidatorImplTest {
     void validateTest(String input) throws JsonValidationException {
         int expected = input.indexOf('e') + 1;
 
-        int result = jsonBooleanValidator.validate(input.toCharArray(), 1);
+        int result = jsonBooleanValidator.validate(input, 1);
 
         assertEquals(expected, result);
     }
@@ -37,6 +37,6 @@ public class JsonBooleanValidatorImplTest {
     })
     @DisplayName(JsonValidatorTestCases.INVALIDATE_JSON_TEST)
     void invalidateTest(String input) {
-        assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input.toCharArray(), 0));
+        assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input, 0));
     }
 }

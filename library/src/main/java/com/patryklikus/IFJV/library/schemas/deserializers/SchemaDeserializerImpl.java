@@ -3,10 +3,8 @@ package com.patryklikus.IFJV.library.schemas.deserializers;
 
 import com.google.gson.*;
 import com.patryklikus.IFJV.library.schemas.models.*;
-import com.patryklikus.IFJV.library.utils.JsonElementType;
-import com.patryklikus.IFJV.library.schemas.models.*;
 import com.patryklikus.IFJV.library.utils.GsonUtils;
-
+import com.patryklikus.IFJV.library.utils.JsonElementType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 import lombok.NonNull;

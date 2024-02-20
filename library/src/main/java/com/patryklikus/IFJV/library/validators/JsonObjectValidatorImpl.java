@@ -19,10 +19,10 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
      * {@inheritDoc}
      */
     @Override
-    public int validate(char[] json, int i, ObjectSchema schema) throws JsonValidationException {
+    public int validate(String json, int i, ObjectSchema schema) throws JsonValidationException {
         // 1 step
-        while (i < json.length) {
-            char character = json[i++];
+        while (i < json.length()) {
+            char character = json.charAt(i++);
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == '{') {
                     break;
@@ -35,8 +35,8 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
         int[] indexPointer = new int[1];
         TCharLinkedList extractedString = null;
         int processedRequiredProps = 0;
-        for (; i < json.length; i++) {
-            char character = json[i];
+        for (; i < json.length(); i++) {
+            char character = json.charAt(i);
             if (!CharUtils.isWhiteSpace(character)) {
                 if (character == '}') {
                     if (schema.getDependentRequired().isEmpty())
@@ -49,10 +49,10 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             }
         }
         Set<String> processedFields = new HashSet<>(schema.getProperties().size() + 1, 1);
-        for (; i < json.length; i++) {
+        for (; i < json.length(); i++) {
             // step 3
-            while (i < json.length) {
-                char character = json[i++];
+            while (i < json.length()) {
+                char character = json.charAt(i++);
                 if (!CharUtils.isWhiteSpace(character)) {
                     if (character == '"') {
                         indexPointer[0] = i - 1;
@@ -73,8 +73,8 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             }
             processedFields.add(key);
             // step 5
-            while (i < json.length) {
-                char character = json[i++];
+            while (i < json.length()) {
+                char character = json.charAt(i++);
                 if (!CharUtils.isWhiteSpace(character)) {
                     if (character == ':') {
                         break;
@@ -92,8 +92,8 @@ class JsonObjectValidatorImpl implements JsonObjectValidator {
             if (schema.getDependentRequired().contains(key))
                 processedRequiredProps++;
             // step 7
-            while (i < json.length) {
-                char character = json[i++];
+            while (i < json.length()) {
+                char character = json.charAt(i++);
                 if (!CharUtils.isWhiteSpace(character)) {
                     if (character == ',')
                         break;

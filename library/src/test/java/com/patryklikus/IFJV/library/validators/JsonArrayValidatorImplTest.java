@@ -31,7 +31,7 @@ class JsonArrayValidatorImplTest {
     @Test
     @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST)
     void validateTest() throws JsonValidationException {
-        char[] input = ": [ true , false ] ,".toCharArray();
+        String input = ": [ true , false ] ,";
         BooleanSchema booleanSchema = new BooleanSchema();
         ArraySchema schema = new ArraySchema(2, 2, booleanSchema);
         when(jsonValidator.validate(input, 4, booleanSchema)).thenReturn(8);
@@ -45,7 +45,7 @@ class JsonArrayValidatorImplTest {
     @Test
     @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST + " if array is empty")
     void validateEmptyArrayTest() throws JsonValidationException {
-        char[] input = ": [ ] ,".toCharArray();
+        String input = ": [ ] ,";
         BooleanSchema booleanSchema = new BooleanSchema();
         ArraySchema schema = new ArraySchema(0, null, booleanSchema);
 
@@ -63,6 +63,6 @@ class JsonArrayValidatorImplTest {
         BooleanSchema booleanSchema = new BooleanSchema();
         ArraySchema schema = new ArraySchema(2, 2, booleanSchema);
 
-        assertThrows(JsonValidationException.class, () -> jsonArrayValidator.validate(input.toCharArray(), 0, schema));
+        assertThrows(JsonValidationException.class, () -> jsonArrayValidator.validate(input, 0, schema));
     }
 }

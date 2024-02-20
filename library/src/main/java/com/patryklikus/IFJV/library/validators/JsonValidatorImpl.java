@@ -3,11 +3,10 @@ package com.patryklikus.IFJV.library.validators;
 
 import com.patryklikus.IFJV.library.schemas.models.*;
 import com.patryklikus.IFJV.library.utils.CharUtils;
+import javax.annotation.Nullable;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 
 public class JsonValidatorImpl implements JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidatorImpl.class);
@@ -27,12 +26,11 @@ public class JsonValidatorImpl implements JsonValidator {
 
     @Override
     @Nullable
-    public String validate(char[] json, @NonNull JsonSchema schema) {
+    public String validate(String json, @NonNull JsonSchema schema) {
         try {
             int i = validate(json, 0, schema);
-            for (; i < json.length; i++) {
-                char character = json[i];
-                if (!CharUtils.isWhiteSpace(character)) {
+            for (; i < json.length(); i++) {
+                if (!CharUtils.isWhiteSpace(json.charAt(i))) {
                     return String.format("Unexpected character at %d index", i);
                 }
             }
@@ -45,7 +43,7 @@ public class JsonValidatorImpl implements JsonValidator {
         return null;
     }
 
-    int validate(char[] json, int i, JsonSchema schema) throws JsonValidationException {
+    int validate(String json, int i, JsonSchema schema) throws JsonValidationException {
         return switch (schema.getType()) {
             case ARRAY -> arrayValidator.validate(json, i, (ArraySchema) schema);
             case BOOLEAN -> booleanValidator.validate(json, i);

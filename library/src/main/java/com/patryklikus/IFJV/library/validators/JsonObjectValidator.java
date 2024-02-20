@@ -21,5 +21,5 @@ public interface JsonObjectValidator extends JsonElementValidator {
      * @return index of the first char after the object
      * @throws JsonValidationException if JSON is invalid
      */
-    int validate(char[] json, int i, ObjectSchema schema) throws JsonValidationException;
+    int validate(String json, int i, ObjectSchema schema) throws JsonValidationException;
 }

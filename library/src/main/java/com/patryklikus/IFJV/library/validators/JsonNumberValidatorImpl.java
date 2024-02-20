@@ -9,19 +9,19 @@ import lombok.NonNull;
 
 class JsonNumberValidatorImpl implements JsonNumberValidator {
     @Override
-    public int validate(char[] json, int i, @NonNull IntegerSchema schema) throws JsonValidationException {
-        while (i < json.length && CharUtils.isWhiteSpace(json[i]))
+    public int validate(String json, int i, @NonNull IntegerSchema schema) throws JsonValidationException {
+        while (i < json.length() && CharUtils.isWhiteSpace(json.charAt(i)))
             i++;
 
         var charList = new TCharLinkedList();
-        char character = json[i++];
+        char character = json.charAt(i++);
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
         else
             throw new JsonValidationException("illegal character", --i);
 
-        while (i < json.length) {
-            character = json[i++];
+        while (i < json.length()) {
+            character = json.charAt(i++);
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
             } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
@@ -35,21 +35,21 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
     }
 
     @Override
-    public int validate(char[] json, int i, @NonNull NumberSchema schema) throws JsonValidationException {
-        for (; i < json.length; i++) {
-            if (!CharUtils.isWhiteSpace(json[i]))
+    public int validate(String json, int i, @NonNull NumberSchema schema) throws JsonValidationException {
+        for (; i < json.length(); i++) {
+            if (!CharUtils.isWhiteSpace(json.charAt(i)))
                 break;
         }
 
         var charList = new TCharLinkedList();
-        char character = json[i++];
+        char character = json.charAt(i++);
         if (character == '-' || CharUtils.isDigit(character))
             charList.add(character);
         else
             throw new JsonValidationException("illegal character", --i);
 
-        while (i < json.length) {
-            character = json[i++];
+        while (i < json.length()) {
+            character = json.charAt(i++);
             charList.add(character);
             if (character == '.') {
                 break;
@@ -60,8 +60,8 @@ class JsonNumberValidatorImpl implements JsonNumberValidator {
             }
         }
 
-        while (i < json.length) {
-            character = json[i++];
+        while (i < json.length()) {
+            character = json.charAt(i++);
             if (CharUtils.isDigit(character)) {
                 charList.add(character);
             } else if (CharUtils.isWhiteSpace(character) || character == ',' || character == '}') {
