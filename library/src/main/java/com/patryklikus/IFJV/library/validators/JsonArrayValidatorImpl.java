@@ -4,10 +4,10 @@ package com.patryklikus.IFJV.library.validators;
 import com.patryklikus.IFJV.library.schemas.models.ArraySchema;
 import com.patryklikus.IFJV.library.utils.CharUtils;
 
-class JsonArrayValidatorImpl implements JsonArrayValidator {
-    private final JsonValidatorImpl jsonValidator;
+class JsonArrayValidatorImpl implements JsonElementValidator<ArraySchema> {
+    private final JsonValidator jsonValidator;
 
-    public JsonArrayValidatorImpl(JsonValidatorImpl jsonValidator) {
+    public JsonArrayValidatorImpl(JsonValidator jsonValidator) {
         this.jsonValidator = jsonValidator;
     }
 

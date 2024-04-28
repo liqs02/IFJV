@@ -1,11 +1,12 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validators;
 
+import com.patryklikus.IFJV.library.schemas.models.BooleanSchema;
 import com.patryklikus.IFJV.library.utils.CharUtils;
 
-class JsonBooleanValidatorImpl implements JsonBooleanValidator {
+class JsonBooleanValidatorImpl implements JsonElementValidator<BooleanSchema> {
     @Override
-    public int validate(String json, int i) throws JsonValidationException {
+    public int validate(String json, int i, BooleanSchema schema) throws JsonValidationException {
         while (i < json.length()) {
             char character = json.charAt(i++);
             if (!CharUtils.isWhiteSpace(character)) {

@@ -19,7 +19,7 @@ class JsonBooleanValidatorImplBenchmark {
 
     @BeforeEach
     void setUp() {
-        jsonValidator = new JsonValidatorImpl();
+        jsonValidator = new JsonValidator();
     }
 
     @Test
