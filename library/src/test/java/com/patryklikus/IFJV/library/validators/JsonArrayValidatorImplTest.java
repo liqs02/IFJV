@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class JsonArrayValidatorImplTest {
     @Mock
-    private JsonValidatorImpl jsonValidator;
+    private JsonValidator jsonValidator;
     private JsonArrayValidator jsonArrayValidator;
 
     @BeforeEach

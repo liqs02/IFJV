@@ -5,18 +5,34 @@ import com.patryklikus.IFJV.library.schemas.models.JsonSchema;
 import com.patryklikus.IFJV.library.schemas.models.ObjectSchema;
 import com.patryklikus.IFJV.library.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
+
 import java.util.HashSet;
 import java.util.Set;
 
-class JsonObjectValidatorImpl implements JsonObjectValidator {
-    private final JsonValidatorImpl jsonValidator;
+class JsonObjectValidatorImpl implements JsonElementValidator<ObjectSchema> {
+    private final JsonValidator jsonValidator;
 
-    public JsonObjectValidatorImpl(JsonValidatorImpl jsonValidator) {
+    public JsonObjectValidatorImpl(JsonValidator jsonValidator) {
         this.jsonValidator = jsonValidator;
     }
 
     /**
-     * {@inheritDoc}
+     * STEPS: <br/>
+     * 1. Should find { char <br/>
+     * 2. If found } char checks that object have not any required parameters.
+     * 3. Extract key string.
+     * 4. Check that the object does not have two fields with the same key <br/>
+     * 5. Should find : char <br/>
+     * 6. Validate JSON value <br/>
+     * 7. If found , char then go to step 2. If found }, return index of next char. <br/>
+     * In each step we skip empty chars. If we found something different from what we were looking for we throw
+     * exception <br/>
+     *
+     * @param json   which we validate
+     * @param i      index from we should start validation
+     * @param schema on the basis of which we validate
+     * @return index of the first char after the object
+     * @throws JsonValidationException if JSON is invalid
      */
     @Override
     public int validate(String json, int i, ObjectSchema schema) throws JsonValidationException {

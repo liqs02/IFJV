@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class JsonObjectValidatorImplTest {
     @Mock
-    private JsonValidatorImpl jsonValidator;
+    private JsonValidator jsonValidator;
     private JsonObjectValidator jsonObjectValidator;
 
     @ParameterizedTest
@@ -65,7 +65,7 @@ class JsonObjectValidatorImplTest {
     })
     @DisplayName(INVALIDATE_JSON_TEST)
     void invalidateTest(String input) {
-        jsonObjectValidator = new JsonObjectValidatorImpl(new JsonValidatorImpl());
+        jsonObjectValidator = new JsonObjectValidatorImpl(new JsonValidator());
         BooleanSchema booleanSchema = new BooleanSchema();
         IntegerSchema integerSchema = new IntegerSchema(null, null, null, null);
         Map<String, JsonSchema> properties = Map.of(

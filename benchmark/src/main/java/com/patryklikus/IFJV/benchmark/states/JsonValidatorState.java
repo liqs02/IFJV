@@ -2,7 +2,6 @@
 package com.patryklikus.IFJV.benchmark.states;
 
 import com.patryklikus.IFJV.library.validators.JsonValidator;
-import com.patryklikus.IFJV.library.validators.JsonValidatorImpl;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
@@ -13,6 +12,6 @@ public class JsonValidatorState {
 
     @Setup
     public void setUp() {
-        jsonValidator = new JsonValidatorImpl();
+        jsonValidator = new JsonValidator();
     }
 }
