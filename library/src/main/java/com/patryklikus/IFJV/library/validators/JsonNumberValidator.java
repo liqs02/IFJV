@@ -6,7 +6,7 @@ import com.patryklikus.IFJV.library.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
 import lombok.NonNull;
 
-class JsonNumberValidatorImpl implements JsonElementValidator<NumberSchema> {
+class JsonNumberValidator implements JsonElementValidator<NumberSchema> {
     @Override
     public int validate(String json, int i, @NonNull NumberSchema schema) throws JsonValidationException {
         for (; i < json.length(); i++) {

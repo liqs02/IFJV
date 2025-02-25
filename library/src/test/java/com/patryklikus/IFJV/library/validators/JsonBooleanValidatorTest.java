@@ -10,12 +10,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("JsonBooleanValidatorImpl")
-public class JsonBooleanValidatorImplTest {
+public class JsonBooleanValidatorTest {
     private JsonBooleanValidator jsonBooleanValidator;
 
     @BeforeEach
     void setUp() {
-        jsonBooleanValidator = new JsonBooleanValidatorImpl();
+        jsonBooleanValidator = new JsonBooleanValidator();
     }
 
     @ParameterizedTest

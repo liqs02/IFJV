@@ -11,20 +11,20 @@ import javax.annotation.Nullable;
 
 public class JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);
-    private final JsonElementValidator<BooleanSchema> booleanValidator;
-    private final JsonElementValidator<IntegerSchema> integerValidator;
-    private final JsonElementValidator<NumberSchema> numberValidator;
-    private final JsonElementValidator<StringSchema> stringValidator;
-    private final JsonElementValidator<ObjectSchema> objectValidator;
-    private final JsonElementValidator<ArraySchema> arrayValidator;
+    private final JsonBooleanValidator booleanValidator;
+    private final JsonIntegerValidator integerValidator;
+    private final JsonNumberValidator numberValidator;
+    private final JsonStringValidator stringValidator;
+    private final JsonObjectValidator objectValidator;
+    private final JsonArrayValidator arrayValidator;
 
     public JsonValidator() {
-        booleanValidator = new JsonBooleanValidatorImpl();
-        integerValidator = new JsonIntegerValidatorImpl();
-        numberValidator = new JsonNumberValidatorImpl();
-        stringValidator = new JsonStringValidatorImpl();
-        objectValidator = new JsonObjectValidatorImpl(this);
-        arrayValidator = new JsonArrayValidatorImpl(this);
+        booleanValidator = new JsonBooleanValidator();
+        integerValidator = new JsonIntegerValidator();
+        numberValidator = new JsonNumberValidator();
+        stringValidator = new JsonStringValidator();
+        objectValidator = new JsonObjectValidator(this);
+        arrayValidator = new JsonArrayValidator(this);
     }
 
     /**

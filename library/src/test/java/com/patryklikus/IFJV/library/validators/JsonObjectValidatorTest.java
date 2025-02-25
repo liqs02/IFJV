@@ -22,7 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayName("JsonArrayValidatorImpl")
 @ExtendWith(MockitoExtension.class)
-class JsonObjectValidatorImplTest {
+class JsonObjectValidatorTest {
     @Mock
     private JsonValidator jsonValidator;
     private JsonObjectValidator jsonObjectValidator;
@@ -36,7 +36,7 @@ class JsonObjectValidatorImplTest {
     })
     @DisplayName(VALIDATE_JSON_TEST)
     void validateTest(String input) throws JsonValidationException {
-        jsonObjectValidator = new JsonObjectValidatorImpl(jsonValidator);
+        jsonObjectValidator = new JsonObjectValidator(jsonValidator);
         int expected = input.lastIndexOf('}') + 1;
         BooleanSchema booleanSchema = new BooleanSchema();
         IntegerSchema integerSchema = new IntegerSchema(null, null, null, null);
@@ -65,7 +65,7 @@ class JsonObjectValidatorImplTest {
     })
     @DisplayName(INVALIDATE_JSON_TEST)
     void invalidateTest(String input) {
-        jsonObjectValidator = new JsonObjectValidatorImpl(new JsonValidator());
+        jsonObjectValidator = new JsonObjectValidator(new JsonValidator());
         BooleanSchema booleanSchema = new BooleanSchema();
         IntegerSchema integerSchema = new IntegerSchema(null, null, null, null);
         Map<String, JsonSchema> properties = Map.of(

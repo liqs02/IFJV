@@ -29,9 +29,9 @@ repositories {
 }
 
 dependencies {
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     runtimeOnly "org.slf4j:slf4j-jdk14:$slf4jVersion"
-    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     implementation(
             "com.google.code.gson:gson:$gsonVersion",
             "com.google.guava:guava:$guavaVersion",

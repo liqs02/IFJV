@@ -18,14 +18,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @DisplayName("JsonArrayValidatorImpl")
 @ExtendWith(MockitoExtension.class)
-class JsonArrayValidatorImplTest {
+class JsonArrayValidatorTest {
     @Mock
     private JsonValidator jsonValidator;
     private JsonArrayValidator jsonArrayValidator;
 
     @BeforeEach
     void setUp() {
-        jsonArrayValidator = new JsonArrayValidatorImpl(jsonValidator);
+        jsonArrayValidator = new JsonArrayValidator(jsonValidator);
     }
 
     @Test

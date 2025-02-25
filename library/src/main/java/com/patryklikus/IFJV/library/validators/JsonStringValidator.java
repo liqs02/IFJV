@@ -5,7 +5,7 @@ import com.patryklikus.IFJV.library.schemas.models.StringSchema;
 import com.patryklikus.IFJV.library.utils.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
 
-class JsonStringValidatorImpl implements JsonElementValidator<StringSchema> {
+class JsonStringValidator implements JsonElementValidator<StringSchema> {
     @Override
     public int validate(String json, int i, StringSchema schema) throws JsonValidationException {
         while (i < json.length()) {

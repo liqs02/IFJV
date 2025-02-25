@@ -12,12 +12,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayName("JsonNumberValidatorImpl")
-class JsonStringValidatorImplTest {
+class JsonStringValidatorTest {
     private JsonStringValidator jsonStringValidator;
 
     @BeforeEach
     void setUp() {
-        jsonStringValidator = new JsonStringValidatorImpl();
+        jsonStringValidator = new JsonStringValidator();
     }
 
     @Test

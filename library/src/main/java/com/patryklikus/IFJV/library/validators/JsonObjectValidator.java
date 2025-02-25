@@ -9,22 +9,24 @@ import gnu.trove.list.linked.TCharLinkedList;
 import java.util.HashSet;
 import java.util.Set;
 
-class JsonObjectValidatorImpl implements JsonElementValidator<ObjectSchema> {
+class JsonObjectValidator implements JsonElementValidator<ObjectSchema> {
     private final JsonValidator jsonValidator;
 
-    public JsonObjectValidatorImpl(JsonValidator jsonValidator) {
+    public JsonObjectValidator(JsonValidator jsonValidator) {
         this.jsonValidator = jsonValidator;
     }
 
     /**
      * STEPS: <br/>
-     * 1. Should find { char <br/>
-     * 2. If found } char checks that object have not any required parameters.
-     * 3. Extract key string.
-     * 4. Check that the object does not have two fields with the same key <br/>
-     * 5. Should find : char <br/>
-     * 6. Validate JSON value <br/>
-     * 7. If found , char then go to step 2. If found }, return index of next char. <br/>
+     * <ol>
+     * <li> Should find '{' char
+     * <li> If found '}' char checks that object have not any required parameters.
+     * <li> Extract key string.
+     * <li> Check that the object does not have two fields with the same key
+     * <li> Should find : char
+     * <li> Validate JSON value
+     * <li> If found , char then go to step 2. If found }, return index of next char.
+     * </ol>
      * In each step we skip empty chars. If we found something different from what we were looking for we throw
      * exception <br/>
      *

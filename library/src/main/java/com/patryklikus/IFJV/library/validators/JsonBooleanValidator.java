@@ -4,7 +4,7 @@ package com.patryklikus.IFJV.library.validators;
 import com.patryklikus.IFJV.library.schemas.models.BooleanSchema;
 import com.patryklikus.IFJV.library.utils.CharUtils;
 
-class JsonBooleanValidatorImpl implements JsonElementValidator<BooleanSchema> {
+class JsonBooleanValidator implements JsonElementValidator<BooleanSchema> {
     @Override
     public int validate(String json, int i, BooleanSchema schema) throws JsonValidationException {
         while (i < json.length()) {
