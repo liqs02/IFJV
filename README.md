@@ -1,15 +1,19 @@
 # Incredibly Fast Json Validator
 
-Note: project is still in development. In the `issues` section, you can see future features.
+IFJV is a Java-based tool designed for high-speed JSON validation using a predefined schema. This project is a demo
+version and does not include all potential features. It offers an efficient solution, using string-based validation for
+JSONs rather than relying on heavier structures.
 
-IFJV provides fast json validation in java using a defined schema. The scalability of the algorithm is close to O(n),
-where n is equal to the number of characters in the json. Currently it supports only strongly typed json schema.
+## Scalability
+
+The validation algorithm operates with scalability close to O(n), where n represents the number of characters in the
+JSON string.
 
 ## Schemas
 
 IFJV schemas are similar to popular json validation schemas which are described in
-detail [here](https://json-schema.org/draft/2020-12/json-schema-validation). However, it still doesn't support all of
-these features. To define schemas we use `yaml` files.
+detail [here](https://json-schema.org/draft/2020-12/json-schema-validation). However, it doesn't support all of these
+features. To define schemas we use `yaml` files.
 
 | root instance types | is supported |
 |:-------------------:|:------------:|
@@ -120,4 +124,4 @@ minLength: 1
 
 ## License
 
-All rights reserved. If you want to use it [contact me](https://www.linkedin.com/in/patryklikus).
+All rights reserved. If you want to use it, please [contact me](https://www.linkedin.com/in/patryklikus).
