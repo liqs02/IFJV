@@ -3,10 +3,11 @@ package com.patryklikus.IFJV.library.validator;
 
 import com.patryklikus.IFJV.library.schema.model.*;
 import com.patryklikus.IFJV.library.util.CharUtils;
-import javax.annotation.Nullable;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
 
 public class JsonValidator {
     private static final Logger LOG = LoggerFactory.getLogger(JsonValidator.class);

@@ -2,14 +2,15 @@
 package com.patryklikus.IFJV.library.schema.model;
 
 import com.patryklikus.IFJV.library.util.JsonElementType;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
+
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 @EqualsAndHashCode
 @Getter

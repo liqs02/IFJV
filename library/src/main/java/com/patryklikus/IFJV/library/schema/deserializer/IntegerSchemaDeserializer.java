@@ -4,6 +4,7 @@ package com.patryklikus.IFJV.library.schema.deserializer;
 import com.google.gson.*;
 import com.patryklikus.IFJV.library.schema.model.IntegerSchema;
 import com.patryklikus.IFJV.library.util.GsonUtils;
+
 import java.lang.reflect.Type;
 
 public class IntegerSchemaDeserializer implements JsonDeserializer<IntegerSchema> {

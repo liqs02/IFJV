@@ -1,9 +1,6 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.patryklikus.IFJV.library.schema.model.IntegerSchema;
 import com.patryklikus.IFJV.library.schema.model.NumberSchema;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,7 +9,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-@DisplayName("JsonNumberValidatorImpl")
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class JsonNumberValidatorTest {
     private JsonNumberValidator jsonNumberValidator;
 

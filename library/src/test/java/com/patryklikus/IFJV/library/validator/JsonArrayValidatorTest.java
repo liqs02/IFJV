@@ -1,10 +1,6 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
-
 import com.patryklikus.IFJV.library.schema.model.ArraySchema;
 import com.patryklikus.IFJV.library.schema.model.BooleanSchema;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +12,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-@DisplayName("JsonArrayValidatorImpl")
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(MockitoExtension.class)
 class JsonArrayValidatorTest {
     @Mock
@@ -55,9 +54,7 @@ class JsonArrayValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            " [ ] ", " [ true ] ", " [ true , true , true ] "
-    })
+    @ValueSource(strings = {" [ ] ", " [ true ] ", " [ true , true , true ] "})
     @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
         BooleanSchema booleanSchema = new BooleanSchema();

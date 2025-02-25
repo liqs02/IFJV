@@ -1,18 +1,18 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.patryklikus.IFJV.library.schema.model.*;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@DisplayName("JsonValidatorImpl")
-class JsonBooleanValidatorBenchmark {
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class JsonValidatorTest {
     private JsonValidator jsonValidator;
 
     @BeforeEach

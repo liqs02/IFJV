@@ -1,34 +1,24 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.schema;
 
-import static com.patryklikus.IFJV.library.schema.SchemaDeserializerImplTestCases.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import com.patryklikus.IFJV.library.schema.deserializer.InvalidJsonSchemaException;
 import com.patryklikus.IFJV.library.schema.deserializer.SchemaDeserializer;
-import com.patryklikus.IFJV.library.schema.deserializer.SchemaDeserializerImpl;
 import com.patryklikus.IFJV.library.schema.model.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-@DisplayName("SchemaExtractorImpl")
-class SchemaDeserializerImplTest {
-    private SchemaDeserializerImplTestCases cases;
-    protected SchemaDeserializer schemaDeserializer;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-    @BeforeEach
-    void setUp() {
-        schemaDeserializer = new SchemaDeserializerImpl();
-        cases = new SchemaDeserializerImplTestCases(schemaDeserializer);
-    }
+import static org.junit.jupiter.api.Assertions.*;
+
+class SchemaDeserializerTest {
+    private final SchemaDeserializer schemaDeserializer = new SchemaDeserializer();
 
     @Nested
     @DisplayName("ArraySchema")
@@ -38,7 +28,7 @@ class SchemaDeserializerImplTest {
                 "type: array\nitems:\n type: boolean",
                 "type: array\nitems: boolean"
         })
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void defaultSchemaTest(String input) {
             ArraySchema expected = new ArraySchema(0, Integer.MAX_VALUE, new BooleanSchema());
 
@@ -52,7 +42,7 @@ class SchemaDeserializerImplTest {
                 "type: array\nminItems: 1\nmaxItems: 1\nitems:\n type: boolean",
                 "type: array\nminItems: 1\nmaxItems: 1\nitems: boolean"
         })
-        @DisplayName(DESERIALIZE_SCHEMA_TEST)
+        @DisplayName("Should deserialize schema with optional properties")
         void schemaTest(String input) {
             ArraySchema expected = new ArraySchema(1, 1, new BooleanSchema());
 
@@ -71,9 +61,11 @@ class SchemaDeserializerImplTest {
                 "type: array\nmaxItems: x",
                 "type: array"
         })
-        @DisplayName(DESERIALIZE_SCHEMA_WITH_ILLEGAL_VALUES_TEST)
+        @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            cases.deserializeSchemaWithIllegalValuesTest(schema);
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+
+            assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
     }
 
@@ -82,7 +74,7 @@ class SchemaDeserializerImplTest {
     class BooleanSchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {"type: boolean", "boolean"})
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void schemaTest(String input) {
             JsonSchema schema = schemaDeserializer.deserialize(input);
 
@@ -95,7 +87,7 @@ class SchemaDeserializerImplTest {
     class IntegerSchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {"type: integer", "integer"})
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void defaultSchemaTest(String input) {
             var expected = new IntegerSchema(Long.MIN_VALUE, Long.MAX_VALUE, null, null);
 
@@ -109,7 +101,7 @@ class SchemaDeserializerImplTest {
                 "type: integer\nminimum: -1\nmaximum: 2",
                 "type: integer\nexclusiveMinimum: -2\nexclusiveMaximum: 3"
         })
-        @DisplayName(DESERIALIZE_SCHEMA_TEST)
+        @DisplayName("Should deserialize schema with optional properties")
         void schemaTest(String input) {
             var expected = new IntegerSchema(-1L, 2L, null, null);
 
@@ -126,9 +118,11 @@ class SchemaDeserializerImplTest {
                 "type: integer\nexclusiveMinimum: 0.1\nmaximum: 0",
                 "type: integer\nminimum: 0.1\nexclusiveMaximum: 0"
         })
-        @DisplayName(DESERIALIZE_SCHEMA_WITH_ILLEGAL_VALUES_TEST)
+        @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            cases.deserializeSchemaWithIllegalValuesTest(schema);
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+
+            assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
     }
 
@@ -137,7 +131,7 @@ class SchemaDeserializerImplTest {
     class NumberSchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {"type: number", "number"})
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void defaultSchemaTest(String input) {
             var expected = new NumberSchema(Double.MIN_VALUE, Double.MAX_VALUE, null, null);
 
@@ -153,7 +147,7 @@ class SchemaDeserializerImplTest {
                 "type: number\nexclusiveMinimum: -0.5000000000000001\nmaximum: 1.5",
                 "type: number\nminimum: -0.5\nexclusiveMaximum: 1.5000000000000002",
         })
-        @DisplayName(DESERIALIZE_SCHEMA_TEST)
+        @DisplayName("Should deserialize schema with optional properties")
         void SchemaTest(String input) {
             var expected = new NumberSchema(-0.5, 1.5, null, null);
 
@@ -170,9 +164,11 @@ class SchemaDeserializerImplTest {
                 "type: number\nexclusiveMinimum: 0.1\nmaximum: 0",
                 "type: number\nminimum: 0.1\nexclusiveMaximum: 0"
         })
-        @DisplayName(DESERIALIZE_SCHEMA_WITH_ILLEGAL_VALUES_TEST)
+        @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            cases.deserializeSchemaWithIllegalValuesTest(schema);
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+
+            assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
     }
 
@@ -191,7 +187,7 @@ class SchemaDeserializerImplTest {
                         type: boolean
                 """
         })
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void defaultSchemaTest(String input) {
             Map<String, JsonSchema> arrayProperties = new HashMap<>();
             arrayProperties.put("bool", new BooleanSchema());
@@ -229,7 +225,7 @@ class SchemaDeserializerImplTest {
                         maximum: 2
                 """
         })
-        @DisplayName(DESERIALIZE_SCHEMA_TEST)
+        @DisplayName("Should deserialize schema with optional properties")
         void schemaTest(String input) {
             Map<String, JsonSchema> expectedProperties = new HashMap<>();
             expectedProperties.put("bool", new BooleanSchema());
@@ -248,9 +244,11 @@ class SchemaDeserializerImplTest {
                 "type: object\nproperties: 0",
                 "type: object\nproperties: x",
         })
-        @DisplayName(DESERIALIZE_SCHEMA_WITH_ILLEGAL_VALUES_TEST)
+        @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            cases.deserializeSchemaWithIllegalValuesTest(schema);
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+
+            assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
     }
 
@@ -259,7 +257,7 @@ class SchemaDeserializerImplTest {
     class StringSchemaTests {
         @ParameterizedTest
         @ValueSource(strings = {"type: string", "string"})
-        @DisplayName(DESERIALIZE_DEFAULT_SCHEMA_TEST)
+        @DisplayName("Should deserialize default schema")
         void defaultSchemaTest(String input) {
             var expected = new StringSchema(0, Integer.MAX_VALUE);
 
@@ -269,7 +267,7 @@ class SchemaDeserializerImplTest {
         }
 
         @Test
-        @DisplayName(DESERIALIZE_SCHEMA_TEST)
+        @DisplayName("Should deserialize schema with optional properties")
         void schemaTest() {
             var expected = new StringSchema(1, 3);
 
@@ -283,9 +281,11 @@ class SchemaDeserializerImplTest {
                 "type: string\nminLength: -1",
                 "type: string\nmaxLength: -1",
         })
-        @DisplayName(DESERIALIZE_SCHEMA_WITH_ILLEGAL_VALUES_TEST)
+        @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            cases.deserializeSchemaWithIllegalValuesTest(schema);
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+
+            assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
     }
 }

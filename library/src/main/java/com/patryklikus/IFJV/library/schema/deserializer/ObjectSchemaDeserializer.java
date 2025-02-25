@@ -5,6 +5,7 @@ import com.google.gson.*;
 import com.patryklikus.IFJV.library.schema.model.JsonSchema;
 import com.patryklikus.IFJV.library.schema.model.ObjectSchema;
 import com.patryklikus.IFJV.library.util.GsonUtils;
+
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;

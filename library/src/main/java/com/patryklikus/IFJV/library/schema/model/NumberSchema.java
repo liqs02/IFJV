@@ -2,10 +2,11 @@
 package com.patryklikus.IFJV.library.schema.model;
 
 import com.patryklikus.IFJV.library.util.JsonElementType;
-import java.util.Objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import java.util.Objects;
 
 @EqualsAndHashCode
 @Getter
