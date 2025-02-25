@@ -18,16 +18,3 @@ allprojects {
     group = 'com.patryklikus'
     version = '0.0-alpha'
 }
-
-spotless {
-    java {
-        target project.fileTree(project.rootDir) {
-            include '**/*.java'
-        }
-        indentWithSpaces()
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        importOrder 'static', ''
-        licenseHeader('/* Copyright Patryk Likus All Rights Reserved. */')
-    }
-}
