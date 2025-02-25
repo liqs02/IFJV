@@ -1,6 +1,7 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
+import com.patryklikus.IFJV.library.schema.model.BooleanSchema;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ class JsonBooleanValidatorTest {
     void validateTest(String input) throws JsonValidationException {
         int expected = input.indexOf('e') + 1;
 
-        int result = jsonBooleanValidator.validate(input, 1);
+        int result = jsonBooleanValidator.validate(input, 1, new BooleanSchema());
 
         assertEquals(expected, result);
     }
@@ -36,6 +37,6 @@ class JsonBooleanValidatorTest {
     })
     @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
-        assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input, 0));
+        assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input, 0, new BooleanSchema()));
     }
 }
