@@ -29,7 +29,7 @@ class JsonArrayValidatorTest {
     }
 
     @Test
-    @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST)
+    @DisplayName("Should return true if json is valid")
     void validateTest() throws JsonValidationException {
         String input = ": [ true , false ] ,";
         BooleanSchema booleanSchema = new BooleanSchema();
@@ -43,7 +43,7 @@ class JsonArrayValidatorTest {
     }
 
     @Test
-    @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST + " if array is empty")
+    @DisplayName("Should return true if array is empty")
     void validateEmptyArrayTest() throws JsonValidationException {
         String input = ": [ ] ,";
         BooleanSchema booleanSchema = new BooleanSchema();
@@ -58,7 +58,7 @@ class JsonArrayValidatorTest {
     @ValueSource(strings = {
             " [ ] ", " [ true ] ", " [ true , true , true ] "
     })
-    @DisplayName(JsonValidatorTestCases.INVALIDATE_JSON_TEST)
+    @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
         BooleanSchema booleanSchema = new BooleanSchema();
         ArraySchema schema = new ArraySchema(2, 2, booleanSchema);

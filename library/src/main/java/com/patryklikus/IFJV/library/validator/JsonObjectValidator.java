@@ -5,7 +5,6 @@ import com.patryklikus.IFJV.library.schema.model.JsonSchema;
 import com.patryklikus.IFJV.library.schema.model.ObjectSchema;
 import com.patryklikus.IFJV.library.util.CharUtils;
 import gnu.trove.list.linked.TCharLinkedList;
-
 import java.util.HashSet;
 import java.util.Set;
 

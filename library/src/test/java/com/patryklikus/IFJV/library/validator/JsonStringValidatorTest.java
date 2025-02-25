@@ -21,7 +21,7 @@ class JsonStringValidatorTest {
     }
 
     @Test
-    @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST + " if string has maximum length")
+    @DisplayName("Should return true if string has maximum length")
     void validateMaxLengthTest() throws JsonValidationException {
         String input = """
                 : "val\\""}
@@ -34,7 +34,7 @@ class JsonStringValidatorTest {
     }
 
     @Test
-    @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST + " if string has minimum length")
+    @DisplayName("Should return true if string has minimum length")
     void validateMinLengthTest() throws JsonValidationException {
         String input = """
                 : "\\n",
@@ -50,7 +50,7 @@ class JsonStringValidatorTest {
     @ValueSource(strings = {
             " \"x\" ", " \"xxxx\" ", " xxx "
     })
-    @DisplayName(JsonValidatorTestCases.INVALIDATE_JSON_TEST)
+    @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
         StringSchema schema = new StringSchema(2, 3);
 

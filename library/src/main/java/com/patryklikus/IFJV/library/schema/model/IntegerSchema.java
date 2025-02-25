@@ -26,7 +26,7 @@ public class IntegerSchema implements JsonSchema {
         this.minimum = Objects.requireNonNullElse(minimum, Long.MIN_VALUE);
         this.maximum = Objects.requireNonNullElse(maximum, Long.MAX_VALUE);
         if (this.minimum >= this.maximum)
-            throw new IllegalArgumentException("Minimum value can't be higher than maximum");
+            throw new IllegalArgumentException("minimum value can't be higher than maximum");
     }
 
     @Override

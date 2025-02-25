@@ -1,8 +1,6 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
-import static com.patryklikus.IFJV.library.validator.JsonValidatorTestCases.INVALIDATE_JSON_TEST;
-import static com.patryklikus.IFJV.library.validator.JsonValidatorTestCases.VALIDATE_JSON_TEST;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.patryklikus.IFJV.library.schema.model.*;
@@ -23,7 +21,7 @@ class JsonBooleanValidatorBenchmark {
     }
 
     @Test
-    @DisplayName(VALIDATE_JSON_TEST)
+    @DisplayName("Should return true if json is valid")
     void validateTest() {
         String input = """
                 [{"bool": true, "num": 1}, {"bool": true}]
@@ -41,7 +39,7 @@ class JsonBooleanValidatorBenchmark {
     }
 
     @Test
-    @DisplayName(INVALIDATE_JSON_TEST)
+    @DisplayName("Should throw exception if json is invalid")
     void invalidateTest() {
         ObjectSchema objectSchema = new ObjectSchema(true, null, Collections.emptyMap());
 

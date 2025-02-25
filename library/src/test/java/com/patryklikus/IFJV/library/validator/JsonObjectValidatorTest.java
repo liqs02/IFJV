@@ -1,8 +1,6 @@
 /* Copyright Patryk Likus All Rights Reserved. */
 package com.patryklikus.IFJV.library.validator;
 
-import static com.patryklikus.IFJV.library.validator.JsonValidatorTestCases.INVALIDATE_JSON_TEST;
-import static com.patryklikus.IFJV.library.validator.JsonValidatorTestCases.VALIDATE_JSON_TEST;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -34,7 +32,7 @@ class JsonObjectValidatorTest {
             : { "bool" : true }
             """
     })
-    @DisplayName(VALIDATE_JSON_TEST)
+    @DisplayName("Should return true if json is valid")
     void validateTest(String input) throws JsonValidationException {
         jsonObjectValidator = new JsonObjectValidator(jsonValidator);
         int expected = input.lastIndexOf('}') + 1;
@@ -63,7 +61,7 @@ class JsonObjectValidatorTest {
             { "bool": true, "bool": false }
             """
     })
-    @DisplayName(INVALIDATE_JSON_TEST)
+    @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
         jsonObjectValidator = new JsonObjectValidator(new JsonValidator());
         BooleanSchema booleanSchema = new BooleanSchema();

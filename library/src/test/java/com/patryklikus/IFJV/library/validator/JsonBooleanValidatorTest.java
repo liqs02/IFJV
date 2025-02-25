@@ -20,7 +20,7 @@ public class JsonBooleanValidatorTest {
 
     @ParameterizedTest
     @ValueSource(strings = {": true  ", ": false  "})
-    @DisplayName(JsonValidatorTestCases.VALIDATE_JSON_TEST)
+    @DisplayName("Should return true if json is valid")
     void validateTest(String input) throws JsonValidationException {
         int expected = input.indexOf('e') + 1;
 
@@ -35,7 +35,7 @@ public class JsonBooleanValidatorTest {
             "True", "tRue", "trUe", "truE",
             "False", "fAlse", "faLse", "falSe", "falsE"
     })
-    @DisplayName(JsonValidatorTestCases.INVALIDATE_JSON_TEST)
+    @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
         assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input, 0));
     }
