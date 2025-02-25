@@ -18,7 +18,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SchemaDeserializerTest {
-    private final SchemaDeserializer schemaDeserializer = new SchemaDeserializer();
+    private final SchemaDeserializer deserializer = new SchemaDeserializer();
 
     @Nested
     @DisplayName("ArraySchema")
@@ -32,7 +32,7 @@ class SchemaDeserializerTest {
         void defaultSchemaTest(String input) {
             ArraySchema expected = new ArraySchema(0, Integer.MAX_VALUE, new BooleanSchema());
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -46,7 +46,7 @@ class SchemaDeserializerTest {
         void schemaTest(String input) {
             ArraySchema expected = new ArraySchema(1, 1, new BooleanSchema());
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -63,7 +63,7 @@ class SchemaDeserializerTest {
         })
         @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> deserializer.deserialize(schema));
 
             assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
@@ -76,7 +76,7 @@ class SchemaDeserializerTest {
         @ValueSource(strings = {"type: boolean", "boolean"})
         @DisplayName("Should deserialize default schema")
         void schemaTest(String input) {
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertNotNull(schema);
         }
@@ -91,7 +91,7 @@ class SchemaDeserializerTest {
         void defaultSchemaTest(String input) {
             var expected = new IntegerSchema(Long.MIN_VALUE, Long.MAX_VALUE, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -105,7 +105,7 @@ class SchemaDeserializerTest {
         void schemaTest(String input) {
             var expected = new IntegerSchema(-1L, 2L, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -120,7 +120,7 @@ class SchemaDeserializerTest {
         })
         @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> deserializer.deserialize(schema));
 
             assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
@@ -135,7 +135,7 @@ class SchemaDeserializerTest {
         void defaultSchemaTest(String input) {
             var expected = new NumberSchema(Double.MIN_VALUE, Double.MAX_VALUE, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -151,7 +151,7 @@ class SchemaDeserializerTest {
         void SchemaTest(String input) {
             var expected = new NumberSchema(-0.5, 1.5, null, null);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -166,7 +166,7 @@ class SchemaDeserializerTest {
         })
         @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> deserializer.deserialize(schema));
 
             assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
@@ -193,7 +193,7 @@ class SchemaDeserializerTest {
             arrayProperties.put("bool", new BooleanSchema());
             ObjectSchema expected = new ObjectSchema(false, Collections.emptySet(), arrayProperties);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -232,7 +232,7 @@ class SchemaDeserializerTest {
             expectedProperties.put("text", new StringSchema(null, null));
             expectedProperties.put("num", new IntegerSchema(1L, 2L, null, null));
             ObjectSchema expected = new ObjectSchema(true, Set.of("bool", "num"), expectedProperties);
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -246,7 +246,7 @@ class SchemaDeserializerTest {
         })
         @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> deserializer.deserialize(schema));
 
             assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }
@@ -261,7 +261,7 @@ class SchemaDeserializerTest {
         void defaultSchemaTest(String input) {
             var expected = new StringSchema(0, Integer.MAX_VALUE);
 
-            JsonSchema schema = schemaDeserializer.deserialize(input);
+            JsonSchema schema = deserializer.deserialize(input);
 
             assertEquals(expected, schema);
         }
@@ -271,7 +271,7 @@ class SchemaDeserializerTest {
         void schemaTest() {
             var expected = new StringSchema(1, 3);
 
-            JsonSchema schema = schemaDeserializer.deserialize("type: string\nminLength: 1\nmaxLength: 3");
+            JsonSchema schema = deserializer.deserialize("type: string\nminLength: 1\nmaxLength: 3");
 
             assertEquals(expected, schema);
         }
@@ -283,7 +283,7 @@ class SchemaDeserializerTest {
         })
         @DisplayName("Should throw exception")
         void invalidSchemaTest(String schema) {
-            var exception = assertThrows(InvalidJsonSchemaException.class, () -> schemaDeserializer.deserialize(schema));
+            var exception = assertThrows(InvalidJsonSchemaException.class, () -> deserializer.deserialize(schema));
 
             assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
         }

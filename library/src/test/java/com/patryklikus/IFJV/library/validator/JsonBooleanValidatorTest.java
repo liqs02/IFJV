@@ -11,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonBooleanValidatorTest {
-    private JsonBooleanValidator jsonBooleanValidator;
+    private JsonBooleanValidator validator;
 
     @BeforeEach
     void setUp() {
-        jsonBooleanValidator = new JsonBooleanValidator();
+        validator = new JsonBooleanValidator();
     }
 
     @ParameterizedTest
@@ -24,7 +24,7 @@ class JsonBooleanValidatorTest {
     void validateTest(String input) throws JsonValidationException {
         int expected = input.indexOf('e') + 1;
 
-        int result = jsonBooleanValidator.validate(input, 1, new BooleanSchema());
+        int result = validator.validate(input, 1, new BooleanSchema());
 
         assertEquals(expected, result);
     }
@@ -37,6 +37,6 @@ class JsonBooleanValidatorTest {
     })
     @DisplayName("Should throw exception if json is invalid")
     void invalidateTest(String input) {
-        assertThrows(JsonValidationException.class, () -> jsonBooleanValidator.validate(input, 0, new BooleanSchema()));
+        assertThrows(JsonValidationException.class, () -> validator.validate(input, 0, new BooleanSchema()));
     }
 }

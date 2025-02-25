@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonNumberValidatorTest {
-    private JsonNumberValidator validator = new JsonNumberValidator();
+    private final JsonNumberValidator validator = new JsonNumberValidator();
 
     @ParameterizedTest
     @ValueSource(strings = {": 0.0,", ": 1.1 ,", ": 2.5}", ":  3 }"})

@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonStringValidatorTest {
-    private JsonStringValidator jsonStringValidator;
+    private JsonStringValidator validator;
 
     @BeforeEach
     void setUp() {
-        jsonStringValidator = new JsonStringValidator();
+        validator = new JsonStringValidator();
     }
 
     @Test
@@ -27,7 +27,7 @@ class JsonStringValidatorTest {
                 """;
         StringSchema schema = new StringSchema(1, 4);
 
-        int result = jsonStringValidator.validate(input, 1, schema);
+        int result = validator.validate(input, 1, schema);
 
         assertEquals(9, result);
     }
@@ -40,7 +40,7 @@ class JsonStringValidatorTest {
                 """;
         StringSchema schema = new StringSchema(1, 4);
 
-        int result = jsonStringValidator.validate(input, 1, schema);
+        int result = validator.validate(input, 1, schema);
 
         assertEquals(6, result);
     }
@@ -53,6 +53,6 @@ class JsonStringValidatorTest {
     void invalidateTest(String input) {
         StringSchema schema = new StringSchema(2, 3);
 
-        assertThrows(JsonValidationException.class, () -> jsonStringValidator.validate(input, 0, schema));
+        assertThrows(JsonValidationException.class, () -> validator.validate(input, 0, schema));
     }
 }

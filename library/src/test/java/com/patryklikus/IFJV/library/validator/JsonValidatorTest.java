@@ -13,11 +13,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class JsonValidatorTest {
-    private JsonValidator jsonValidator;
+    private JsonValidator validator;
 
     @BeforeEach
     void setUp() {
-        jsonValidator = new JsonValidator();
+        validator = new JsonValidator();
     }
 
     @Test
@@ -33,7 +33,7 @@ class JsonValidatorTest {
         ObjectSchema objectSchema = new ObjectSchema(false, Set.of("bool"), properties);
         ArraySchema arraySchema = new ArraySchema(null, null, objectSchema);
 
-        String errorMessage = jsonValidator.validate(input, arraySchema);
+        String errorMessage = validator.validate(input, arraySchema);
 
         assertNull(errorMessage);
     }
@@ -43,7 +43,7 @@ class JsonValidatorTest {
     void invalidateTest() {
         ObjectSchema objectSchema = new ObjectSchema(true, null, Collections.emptyMap());
 
-        String errorMessage = jsonValidator.validate("{} INVALID", objectSchema);
+        String errorMessage = validator.validate("{} INVALID", objectSchema);
 
         assertNotNull(errorMessage);
         assertEquals("Unexpected character at 3 index", errorMessage);
